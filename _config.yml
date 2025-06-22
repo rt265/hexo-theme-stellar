@@ -1,6 +1,6 @@
 ######## Stellar info ########
 stellar:
-  version: '1.30.4'
+  version: '1.31.0'
   homepage: 'https://xaoxuu.com/wiki/stellar/'
   repo: 'https://github.com/xaoxuu/hexo-theme-stellar'
   main_css: /css/main.css
@@ -13,9 +13,19 @@ preconnect:
   # - https://gcore.jsdelivr.net
   # - https://unpkg.com
 
+# 一旦设置源站地址，非源站地址将不会被SEO收录，并且访问时弹出提示
+# 如果访问地址不在备用站主机列表，则警告信息为非法克隆
+canonical:
+  originalHost: # 主站点域名主机，例如 xaoxuu.com
+  officialHosts: # 官方主机列表，每行一个，例如 xaoxuu.vercel.app
+    - localhost
+
 open_graph:
   enable: true
   twitter_id: # for open_graph meta
+
+structured_data:
+  links: [] # your social links.
 
 
 ######## Sidebar ########
@@ -437,7 +447,7 @@ data_services:
   siteinfo:
     js: /js/services/siteinfo.js
     # 设置 api 可以自动提取网页标题、图标，服务部署方法：https://github.com/xaoxuu/site-info-api/
-    # 接口测试通过后，把按钮的 href 部分替换成 {href} 之后填写到下方，例如：https://api.vlts.cc/site_info/v1?url={href}
+    # 接口测试通过后，把按钮的 href 部分替换成 {href} 之后填写到下方，例如：https://api.xaox.cc/site_info/v1?url={href}
     api: 
   ghinfo:
     js: /js/services/ghinfo.js
@@ -615,7 +625,7 @@ style:
     card: 16px # 文章内大部分卡片的圆角
     card-s: 12px # 文章内小型卡片的圆角
     bar: 8px # 横条类元素的圆角
-    image: 12px # 图片圆角
+    image: 24px # 图片圆角
   color:
     # 动态颜色（会根据明暗主题重设明度值，只用关心色相和饱和度即可）
     background: 'hsl(212 16% 98%)' # 浅色背景颜色
@@ -671,6 +681,8 @@ default:
 
 
 api_host:
-  ghapi: https://api.github.com
-  ghraw: https://raw.githubusercontent.com
-  gist: https://gist.github.com
+  ghapi: api.github.com
+  ghraw: raw.githubusercontent.com
+  gist: gist.github.com
+  # https://github.com/anuraghazra/github-readme-stats
+  ghcard: github-readme-stats.vercel.app

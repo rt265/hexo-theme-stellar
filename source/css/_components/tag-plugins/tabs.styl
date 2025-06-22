@@ -77,9 +77,11 @@
     margin-top: .5rem
     .tab-pane
       display: block
+      max-width: 100%
       &:not(.active)
         visibility: hidden
         height: 0
+        overflow: hidden
       &.active
         visibility: visible
         height: auto
