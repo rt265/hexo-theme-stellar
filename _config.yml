@@ -1,6 +1,6 @@
 ######## Stellar info ########
 stellar:
-  version: '1.32.0'
+  version: '1.32.1'
   homepage: 'https://xaoxuu.com/wiki/stellar/'
   repo: 'https://github.com/xaoxuu/hexo-theme-stellar'
   main_css: /css/main.css
@@ -606,7 +606,7 @@ plugins:
 
 style:
   prefers_theme: auto # auto / light / dark
-  smooth_scroll: false # true / false 开启时如果目录过长可能无法准确定位
+  smooth_scroll: true # true / false 开启时如果目录过长可能无法准确定位
   font-size:
     root: 16px # 改这个会影响全局所有文字的字号
     body: 17px # 影响正文区域的字号，如果改成 px 则不受 root 影响
