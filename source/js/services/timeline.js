@@ -100,6 +100,7 @@ utils.jq(() => {
           cell += '</div>';
           $(el).append(cell);
         });
+        window.wrapLazyloadImages(el);
       });
     }
   });
