@@ -170,7 +170,6 @@
               setTimeout(load, 1000);
             }
           }, 5000);
-
           fetch(url).then(resp => {
             if (timedOut) return;
             clearTimeout(timeout);
