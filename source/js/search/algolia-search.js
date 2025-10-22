@@ -1,5 +1,6 @@
-utils.js(window.searchConfig.js).then(() => {
-  utils.jq(() => {
+utils.js(window.searchConfig.js)
+  .then(() => utils.jq())
+  .then(() => {
     const $inputArea = $("#search-input");
     if ($inputArea.length === 0) return;
 
@@ -47,15 +48,22 @@ utils.js(window.searchConfig.js).then(() => {
         return;
       }
       $searchWrapper.attr('searching', 'true');
-      index.search(query, {
+  index.search(query, {
         hitsPerPage: window.searchConfig.hitsPerPage,
         attributesToHighlight: ['content'],
         attributesToSnippet: ['content:40'],
         highlightPreTag: '<span class="search-keyword">',
         highlightPostTag: '</span>',
         restrictSearchableAttributes: ['content']
-      }).then(responses => {
+      })
+      .then(responses => {
         displayResults(filterResults(responses.hits, filterPath));
+      })
+      .catch(err => {
+        // 在 Promise-only API 下处理错误，避免未捕获的 rejection
+        console.error('Algolia search error:', err);
+        $searchWrapper.attr('searching', 'false');
+        $resultArea.html('');
       });
     }, 300);
 
@@ -93,7 +101,6 @@ utils.js(window.searchConfig.js).then(() => {
     $("#search-close").on("click", () => toggleSearch(false));
     $("#search-clear").on("click", clearSearch);
   });
-});
 
 // 防抖函数
 function debounce(func, wait) {

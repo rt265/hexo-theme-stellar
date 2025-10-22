@@ -125,10 +125,25 @@
     }),
 
     jq: (fn) => {
+      // 返回一个 Promise，确保调用方可以使用 Promise 链或 async/await。
+      // 同时兼容传入回调的旧用法：如果传入函数，则在加载后执行并返回一个 Promise。
+      const needCallback = typeof fn === 'function';
       if (typeof jQuery === 'undefined') {
-        utils.js(deps.jquery).then(fn)
+        // 加载 jQuery 并在加载完成后执行回调（如果有），或仅解析 Promise
+        return utils.js(deps.jquery).then(() => {
+          if (needCallback) return fn();
+          return undefined;
+        });
       } else {
-        fn()
+        // jQuery 已存在，立即执行回调（如果有），并返回已解析的 Promise
+        if (needCallback) {
+          try {
+            return Promise.resolve(fn());
+          } catch (err) {
+            return Promise.reject(err);
+          }
+        }
+        return Promise.resolve();
       }
     },
 
