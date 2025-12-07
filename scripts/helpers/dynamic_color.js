@@ -4,24 +4,24 @@
 function CheckIsColor(bgVal) {
   var type='';
   var color_mode = '';
-  if(/^rgb\(/.test(bgVal)){
+  if(bgVal.startsWith('rgb(')){
       //如果是rgb开头，200-249，250-255，0-199
-      type = "^[rR][gG][Bb][\(]([\\s]*(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?)[\\s]*,){2}[\\s]*(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)[\\s]*[\)]{1}$";
+      type = "^[rR][gG][Bb][(]([\\s]*(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?)[\\s]*,){2}[\\s]*(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)[\\s]*[)]{1}$";
       color_mode = 'rgb';
-  }else if(/^rgba\(/.test(bgVal)){
+  }else if(bgVal.startsWith('rgba(')){
       //如果是rgba开头，判断0-255:200-249，250-255，0-199 判断0-1：0 1 1.0 0.0-0.9
-      type = "^[rR][gG][Bb][Aa][\(]([\\s]*(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?)[\\s]*,){3}[\\s]*(1|1.0|0|0.[0-9])[\\s]*[\)]{1}$";
+      type = "^[rR][gG][Bb][Aa][(]([\\s]*(2[0-4][0-9]|25[0-5]|[01]?[0-9][0-9]?)[\\s]*,){3}[\\s]*(1|1.0|0|0.[0-9])[\\s]*[)]{1}$";
       color_mode = 'rgba';
-  }else if(/^#/.test(bgVal)){
+  }else if(bgVal.startsWith('#')){
       //六位或者三位
       type = "^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$"
       color_mode = 'hex';
-  }else if(/^hsl\(/.test(bgVal)){
+  }else if(bgVal.startsWith('hsl(')){
       //判断0-360 判断0-100%(0可以没有百分号)
-      type = "^[hH][Ss][Ll][\(]([\\s]*(2[0-9][0-9]|360｜3[0-5][0-9]|[01]?[0-9][0-9]?)[\\s]*,)([\\s]*((100|[0-9][0-9]?)%|0)[\\s]*,)([\\s]*((100|[0-9][0-9]?)%|0)[\\s]*)[\)]$";
+      type = "^[hH][Ss][Ll][(]([\\s]*(2[0-9][0-9]|360｜3[0-5][0-9]|[01]?[0-9][0-9]?)[\\s]*,)([\\s]*((100|[0-9][0-9]?)%|0)[\\s]*,)([\\s]*((100|[0-9][0-9]?)%|0)[\\s]*)[)]$";
       color_mode = 'hsl';
-  }else if(/^hsla\(/.test(bgVal)){
-      type = "^[hH][Ss][Ll][Aa][\(]([\\s]*(2[0-9][0-9]|360｜3[0-5][0-9]|[01]?[0-9][0-9]?)[\\s]*,)([\\s]*((100|[0-9][0-9]?)%|0)[\\s]*,){2}([\\s]*(1|1.0|0|0.[0-9])[\\s]*)[\)]$";
+  }else if(bgVal.startsWith('hsla(')){
+      type = "^[hH][Ss][Ll][Aa][(]([\\s]*(2[0-9][0-9]|360｜3[0-5][0-9]|[01]?[0-9][0-9]?)[\\s]*,)([\\s]*((100|[0-9][0-9]?)%|0)[\\s]*,){2}([\\s]*(1|1.0|0|0.[0-9])[\\s]*)[)]$";
       color_mode = 'hsla';
   }
   var re = new RegExp(type);
@@ -54,7 +54,7 @@ function getRgbaValue(rgba_color) {
   if (rgba_color.indexOf('rgb') === 0) {
     if (rgba_color.indexOf('rgba') === -1)
       rgba_color += ',1'; // convert 'rgb(R,G,B)' to 'rgb(R,G,B)A' which looks awful but will pass the regxep below
-    let [r,g,b,a] = rgba_color.match(/[\.\d]+/g).map(function (a) {
+    let [r,g,b,a] = rgba_color.match(/[.\d]+/g).map(function (a) {
       return +a
     });
     return {
@@ -72,7 +72,7 @@ function getHslaValue(hsla_color) {
   if (hsla_color.indexOf('hsl') === 0) {
     if (hsla_color.indexOf('hsla') === -1)
       hsla_color += ',1'; // convert 'hsl(R,G,B)' to 'hsl(R,G,B)A' which looks awful but will pass the regxep below
-    let [h, s, l, a] = hsla_color.match(/[\.\d]+/g).map(function (a) {
+    let [h, s, l, a] = hsla_color.match(/[.\d]+/g).map(function (a) {
       return +a
     });
     return {

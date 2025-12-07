@@ -77,7 +77,7 @@ module.exports = ctx => function(args, content) {
       parmsSet.add(parm);
     });
   });
-  var parmsReg = new RegExp(`\\s*(${[...parmsSet].join("|")}):([\s\S]*?)\\s*`, 'g');  // /\s*(user|md|image|emoji|source|voice|type|video|link|from|file):(.*?)\s*/g
+  var parmsReg = new RegExp(`\\s*(${[...parmsSet].join("|")}):([sS]*?)\\s*`, 'g');  // /\s*(user|md|image|emoji|source|voice|type|video|link|from|file):(.*?)\s*/g
 
   var chatcellNum = 0
   var cells = []

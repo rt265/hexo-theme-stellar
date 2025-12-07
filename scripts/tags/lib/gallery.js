@@ -51,7 +51,7 @@ module.exports = ctx => function(args, content) {
   el += `<div class="tag-plugin gallery ${layoutType}-box" ${ctx.args.joinTags(args, ['size', 'ratio']).join(' ')}>`
   const img_mds = content.split('\n').filter(item => item.trim().length > 0)
   for (let md of img_mds) {
-    const matches = md.match(/\!\[(.*?)\]\((.*?)\)/i)
+    const matches = md.match(/!\[(.*?)\]\((.*?)\)/i)
     if (matches?.length > 2) {
       let alt = matches[1]
       let src = matches[2]
