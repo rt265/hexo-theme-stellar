@@ -137,17 +137,10 @@
       document.head.appendChild(script)
     }),
 
-<<<<<<< HEAD
-    jq: (fn) => {
-      // 返回一个 Promise，确保调用方可以使用 Promise 链或 async/await。
-      // 同时兼容传入回调的旧用法：如果传入函数，则在加载后执行并返回一个 Promise。
-      const needCallback = typeof fn === 'function';
-=======
     // PJAX 事件监听器管理
     _pjaxListeners: new Set(),
     
     jq: (fn, pjax = true) => {
->>>>>>> upstream/main
       if (typeof jQuery === 'undefined') {
         // 加载 jQuery 并在加载完成后执行回调（如果有），或仅解析 Promise
         return utils.js(deps.jquery).then(() => {
