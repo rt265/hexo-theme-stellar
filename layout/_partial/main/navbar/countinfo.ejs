@@ -5,7 +5,7 @@ function layoutDiv() {
     const cnSpeed = theme.wordcount && theme.wordcount.reading_speed ? theme.wordcount.reading_speed : 300;
     const enSpeed = Math.round(cnSpeed / 2);
 
-    el += `<div class="flex-row" id="post-meta">`
+    el += `<div class="flex-row post-meta">`
     // 文章字数
     if(theme.wordcount.post_wordcount) {
       el += `<span class="text created">${__("meta.wordcount.prefix")} `

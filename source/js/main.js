@@ -297,7 +297,7 @@ window.stellar = window.stellar || {};
 stellar.initPage = function () {
   init.toc();
   init.sidebar();
-  init.relativeDate(document.querySelectorAll('#post-meta time'));
+  init.relativeDate(document.querySelectorAll('.post-meta time'));
   init.registerTabsTag();
   
   // Reinitialize comments after PJAX navigation
