@@ -214,6 +214,12 @@ search:
     indexName: 
     js: https://gcore.jsdelivr.net/algoliasearch/3/algoliasearch.min.js
 
+######## Wordcount ########
+wordcount: # 需要安装 hexo-wordcount 插件
+    card_wordcount: true # 是否显示首页文章卡字数统计
+    post_wordcount: true # 是否显示文章页字数统计
+    reading_speed: 300 # 每分钟阅读字数
+    min2read: true # 是否显示阅读时间
 
 ######## Comments ########
 comments:

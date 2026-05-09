@@ -44,6 +44,12 @@ meta:
     hour: hours ago
     day: days ago
     month: months ago
+  wordcount:
+    prefix: Total
+    suffix: words
+  min2read:
+    prefix: Reading Time
+    suffix: mins
 
 page:
   error:

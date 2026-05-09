@@ -44,6 +44,12 @@ meta:
     hour: 小时前
     day: 天前
     month: 个月前
+  wordcount:
+    prefix: 本文共
+    suffix: 字
+  min2read:
+    prefix: 阅读时长
+    suffix: 分钟
 
 page:
   error:

@@ -1,0 +1,30 @@
+<%
+function layoutDiv() {
+  var el = ''
+  if (is_post()) {
+    const cnSpeed = theme.wordcount && theme.wordcount.reading_speed ? theme.wordcount.reading_speed : 300;
+    const enSpeed = Math.round(cnSpeed / 2);
+
+    el += `<div class="flex-row" id="post-meta">`
+    // 文章字数
+    if(theme.wordcount.post_wordcount) {
+      el += `<span class="text created">${__("meta.wordcount.prefix")} `
+      el += wordcount(page.content, {cn: cnSpeed, en: enSpeed})
+      el += ` ${__("meta.wordcount.suffix")}</span>`
+    }
+    // 阅读时长
+    if(theme.wordcount.min2read) {
+      if(theme.wordcount.post_wordcount) {
+        el += `<span class="sep updated"></span><span class="text updated">${__("meta.min2read.prefix") + __("symbol.colon")}`
+      } else {
+        el += `<span class="text created">${__("meta.min2read.prefix") + __("symbol.colon")}`
+      }
+      el += min2read(page.content, { cn: cnSpeed, en: enSpeed })
+      el += ` ${__("meta.min2read.suffix")}</span>`
+    }
+    el += `</div>`
+  }
+  return el
+}
+%>
+<%- layoutDiv() %>
