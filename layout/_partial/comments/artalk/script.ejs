@@ -51,7 +51,9 @@
     window.stellar.initComments = window.stellar.initComments || {};
     window.stellar.initComments.artalk = initArtalk;
     
-    // Initialize on page load
-    initArtalk();
+    // Initialize on page load (only if util is already available; otherwise main.js will call it after loading)
+    if (typeof util !== 'undefined') {
+      initArtalk();
+    }
   })();
 </script>
