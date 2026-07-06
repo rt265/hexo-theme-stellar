@@ -74,10 +74,10 @@ function div_default() {
   el += `<time datetime="${date_xml(post.date)}">${date(post.date, config.date_format)}</time>`
   el += '</span>';
   // wordcount
-  if(theme.wordcount.card_wordcount) {
+  if(theme.symbols_count_time && theme.symbols_count_time.symbols) {
     el += '<span class="cap" id="post-count">';
     el += icon('default:approximately')
-    el += wordcount(post.content)
+    el += symbolsCount(post)
     el += ` ${__("meta.wordcount.suffix")}</span>`
   }
   // cat
