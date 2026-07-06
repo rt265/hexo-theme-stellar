@@ -7,8 +7,8 @@ utils.js(window.searchConfig.js)
     const $resultArea = $("#search-result");
     const $searchWrapper = $("#search-wrapper");
     const $searchMask = $("#search-mask");
-    const client = algoliasearch(window.searchConfig.appId, window.searchConfig.apiKey);
-    const index = client.initIndex(window.searchConfig.indexName);
+    // v5 UMD: algoliasearch is the module namespace; access the named export
+    const client = algoliasearch.algoliasearch(window.searchConfig.appId, window.searchConfig.apiKey);
 
     const filterResults = (hits, filterPath) => {
       if (!filterPath || filterPath === '/') return hits;
@@ -48,23 +48,27 @@ utils.js(window.searchConfig.js)
         return;
       }
       $searchWrapper.attr('searching', 'true');
-  index.search(query, {
-        hitsPerPage: window.searchConfig.hitsPerPage,
-        attributesToHighlight: ['content'],
-        attributesToSnippet: ['content:40'],
-        highlightPreTag: '<span class="search-keyword">',
-        highlightPostTag: '</span>',
-        restrictSearchableAttributes: ['content']
+      client.searchSingleIndex({
+        indexName: window.searchConfig.indexName,
+        searchParams: {
+          query: query,
+          hitsPerPage: window.searchConfig.hitsPerPage,
+          attributesToHighlight: ['content'],
+          attributesToSnippet: ['content:40'],
+          highlightPreTag: '<span class="search-keyword">',
+          highlightPostTag: '</span>',
+          restrictSearchableAttributes: ['content']
+        }
       })
-      .then(responses => {
-        displayResults(filterResults(responses.hits, filterPath));
-      })
-      .catch(err => {
-        // 在 Promise-only API 下处理错误，避免未捕获的 rejection
-        console.error('Algolia search error:', err);
-        $searchWrapper.attr('searching', 'false');
-        $resultArea.html('');
-      });
+        .then(responses => {
+          displayResults(filterResults(responses.hits, filterPath));
+        })
+        .catch(err => {
+          // 在 Promise-only API 下处理错误，避免未捕获的 rejection
+          console.error('Algolia search error:', err);
+          $searchWrapper.attr('searching', 'false');
+          $resultArea.html('');
+        });
     }, 300);
 
     $inputArea.on("input", handleInput);
@@ -105,7 +109,7 @@ utils.js(window.searchConfig.js)
 // 防抖函数
 function debounce(func, wait) {
   let timeout;
-  return function(...args) {
+  return function (...args) {
     clearTimeout(timeout);
     timeout = setTimeout(() => func.apply(this, args), wait);
   };
