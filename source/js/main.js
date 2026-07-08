@@ -97,60 +97,114 @@ const l_body = document.querySelector('.l_body');
 const init = {
   toc: () => {
     utils.jq(() => {
-      const scrollOffset = 32;
-      var segs = [];
-      $("article.md-text :header").each(function (idx, node) {
-        segs.push(node);
+      const SCROLL_OFFSET = 32;
+      const tocContainer = document.querySelector('#data-toc .toc');
+      const tocLinks = document.querySelectorAll('#data-toc a.toc-link');
+
+      // Collect header elements
+      const headerEls = [];
+      const headerElsById = {};
+      document.querySelectorAll('article.md-text h1, article.md-text h2, article.md-text h3, article.md-text h4, article.md-text h5, article.md-text h6').forEach(function (node) {
+        headerEls.push(node);
+        if (node.id) headerElsById[node.id] = node;
       });
-      function activeTOC() {
-        var scrollTop = $(this).scrollTop();
-        var topSeg = null;
-        for (var idx in segs) {
-          var seg = $(segs[idx]);
-          if (seg.offset().top > scrollTop + scrollOffset) {
-            continue;
-          }
-          if (!topSeg) {
-            topSeg = seg;
-          } else if (seg.offset().top >= topSeg.offset().top) {
-            topSeg = seg;
-          }
-        }
-        if (topSeg) {
-          $("#data-toc a.toc-link").removeClass("active");
-          var link = "#" + topSeg.attr("id");
-          if (link != '#undefined') {
-            const highlightItem = $('#data-toc a.toc-link[href="' + encodeURI(link) + '"]');
-            if (highlightItem.length > 0) {
-              highlightItem.addClass("active");
-            }
-          } else {
-            $('#data-toc a.toc-link:first').addClass("active");
-          }
-        }
-      }
-      function scrollTOC() {
-        const e0 = document.querySelector('#data-toc .toc');
-        const e1 = document.querySelector('#data-toc .toc a.toc-link.active');
-        if (e0 == null || e1 == null) {
-          return;
-        }
-        const offsetBottom = e1.getBoundingClientRect().bottom - e0.getBoundingClientRect().bottom + 100;
-        const offsetTop = e1.getBoundingClientRect().top - e0.getBoundingClientRect().top - 64;
-        if (offsetTop < 0) {
-          e0.scrollBy({ top: offsetTop, behavior: "smooth" });
-        } else if (offsetBottom > 0) {
-          e0.scrollBy({ top: offsetBottom, behavior: "smooth" });
+
+      // --- Position cache (invalidated on resize) ---
+      let posCache = null; // array of { top: number }
+      let cacheVersion = 0;
+
+      function buildPosCache() {
+        posCache = [];
+        for (var i = 0; i < headerEls.length; i++) {
+          posCache.push({ top: headerEls[i].getBoundingClientRect().top + window.pageYOffset });
         }
       }
 
-      var timeout = null;
-      window.addEventListener('scroll', function () {
-        activeTOC();
-        if (timeout !== null) clearTimeout(timeout);
-        timeout = setTimeout(function () {
-          scrollTOC();
-        }.bind(this), 50);
+      // Rebuild cache on resize (debounced)
+      let resizeTimer = null;
+      const resizeObserver = new ResizeObserver(function () {
+        if (resizeTimer) clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function () {
+          cacheVersion++;
+          buildPosCache();
+        }, 200);
+      });
+      if (document.querySelector('article.md-text')) {
+        resizeObserver.observe(document.querySelector('article.md-text'));
+      }
+
+      // --- rAF-based scroll handling (one update per frame) ---
+      let rafPending = false;
+      let lastActiveId = null; // avoid redundant class toggles
+
+      function onScrollFrame() {
+        rafPending = false;
+
+        // --- PHASE 1: Read (batch all layout reads) ---
+        if (!posCache) buildPosCache();
+        const scrollTop = window.pageYOffset;
+        let topSegId = null;
+
+        for (var i = headerEls.length - 1; i >= 0; i--) {
+          if (posCache[i].top <= scrollTop + SCROLL_OFFSET) {
+            topSegId = headerEls[i].id;
+            break;
+          }
+        }
+
+        // --- PHASE 2: Write (batch all DOM writes) ---
+        if (topSegId && topSegId !== lastActiveId) {
+          lastActiveId = topSegId;
+          // Remove active from all, add to target
+          for (var j = 0; j < tocLinks.length; j++) {
+            var href = tocLinks[j].getAttribute('href');
+            if (href === '#' + topSegId) {
+              tocLinks[j].classList.add('active');
+            } else {
+              tocLinks[j].classList.remove('active');
+            }
+          }
+        } else if (!topSegId && lastActiveId !== null) {
+          lastActiveId = null;
+          for (var k = 0; k < tocLinks.length; k++) {
+            tocLinks[k].classList.remove('active');
+          }
+          if (tocLinks.length > 0) tocLinks[0].classList.add('active');
+        }
+
+        // --- scrollTOC: keep active link in view ---
+        if (tocContainer && lastActiveId) {
+          const activeLink = tocContainer.querySelector('a.toc-link.active');
+          if (activeLink) {
+            // Batch bounding rect reads
+            const containerRect = tocContainer.getBoundingClientRect();
+            const linkRect = activeLink.getBoundingClientRect();
+            const offsetTop = linkRect.top - containerRect.top - 64;
+            const offsetBottom = linkRect.bottom - containerRect.bottom + 100;
+
+            if (offsetTop < 0) {
+              tocContainer.scrollBy({ top: offsetTop, behavior: 'auto' });
+            } else if (offsetBottom > 0) {
+              tocContainer.scrollBy({ top: offsetBottom, behavior: 'auto' });
+            }
+          }
+        }
+      }
+
+      function scheduleScrollUpdate() {
+        if (!rafPending) {
+          rafPending = true;
+          requestAnimationFrame(onScrollFrame);
+        }
+      }
+
+      // Listen for scroll with passive:true for better performance
+      window.addEventListener('scroll', scheduleScrollUpdate, { passive: true });
+
+      // Invalidate position cache on window resize
+      window.addEventListener('resize', function () {
+        cacheVersion++;
+        buildPosCache();
       });
     })
   },
@@ -299,7 +353,7 @@ stellar.initPage = function () {
   init.sidebar();
   init.relativeDate(document.querySelectorAll('.post-meta time'));
   init.registerTabsTag();
-  
+
   // Reinitialize comments after PJAX navigation
   if (stellar.initComments) {
     for (const commentSystem in stellar.initComments) {

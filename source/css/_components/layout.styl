@@ -12,6 +12,9 @@
   flex-shrink: 0
   position: sticky
   position: -webkit-sticky
+  will-change: transform
+  transform: translateZ(0)
+  contain: layout style
   // 侧边栏容器宽度
   --width-sidebar: calc(var(--gap-margin) * 2 + var(--gap-padding) * 2 + var(--side-content-width))
   width: var(--width-sidebar)
@@ -36,7 +39,9 @@
     grid-gap: calc(var(--gap-margin) * 1)
     .l_right
       position: fixed
-      transform: translateX(320px)
+      transform: translateX(320px) translateZ(0)
+      will-change: transform
+      contain: layout style
       transition: transform .38s ease-out
       margin: 0
       --inset: 8px
@@ -52,7 +57,7 @@
       --blur-px: 50px
   .l_body[rightbar]
     .l_right
-      transform: translateX(0px)
+      transform: translateX(0px) translateZ(0)
     .main-mask
       // opacity 1
       pointer-events: inherit
@@ -66,7 +71,9 @@
     display: block
     .l_left
       position: fixed
-      transform: translateX(-320px)
+      transform: translateX(-320px) translateZ(0)
+      will-change: transform
+      contain: layout style
       transition: transform .38s ease-out
       margin: 0
       --inset: 8px
@@ -82,7 +89,7 @@
       max-width: 100%
   .l_body[leftbar]
     .l_left
-      transform: translateX(0px)
+      transform: translateX(0px) translateZ(0)
     .main-mask
       // opacity 1
       pointer-events: inherit
