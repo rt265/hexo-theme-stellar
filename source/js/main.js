@@ -93,6 +93,34 @@ const hud = {
 
 const l_body = document.querySelector('.l_body');
 
+// Helper: check if user is currently editing in an input, textarea, or contenteditable element
+function isUserEditing() {
+  const el = document.activeElement;
+  if (!el) return false;
+  return el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable;
+}
+
+// Fix: disable smooth scrolling while editing to prevent auto-scroll drift
+// When editing long Artalk replies, the editor auto-grows, and scroll-behavior:smooth
+// on <html> causes the browser's focus-scroll adjustment to animate, compounding
+// with each keystroke. We temporarily switch to instant scrolling during edits.
+(function () {
+  var smoothScrollStyle = '';
+  document.addEventListener('focusin', function (_e) {
+    if (isUserEditing()) {
+      smoothScrollStyle = document.documentElement.style.scrollBehavior;
+      document.documentElement.style.scrollBehavior = 'auto';
+    }
+  });
+  document.addEventListener('focusout', function (_e) {
+    // Delay to let the new activeElement settle (e.g., tabbing between fields)
+    setTimeout(function () {
+      if (!isUserEditing()) {
+        document.documentElement.style.scrollBehavior = smoothScrollStyle;
+      }
+    }, 0);
+  });
+})();
 
 const init = {
   toc: () => {
@@ -112,6 +140,7 @@ const init = {
       // --- Position cache (invalidated on resize) ---
       let posCache = null; // array of { top: number }
       let cacheVersion = 0;
+      let cacheDirty = false;
 
       function buildPosCache() {
         posCache = [];
@@ -120,18 +149,33 @@ const init = {
         }
       }
 
-      // Rebuild cache on resize (debounced)
+      // Rebuild cache on resize (debounced), skip when user is editing
       let resizeTimer = null;
       const resizeObserver = new ResizeObserver(function () {
+        // Skip cache rebuild during editing — Artalk editor growth shouldn't trigger TOC recalc
+        if (isUserEditing()) {
+          cacheDirty = true;
+          return;
+        }
         if (resizeTimer) clearTimeout(resizeTimer);
         resizeTimer = setTimeout(function () {
           cacheVersion++;
           buildPosCache();
+          cacheDirty = false;
         }, 200);
       });
       if (document.querySelector('article.md-text')) {
         resizeObserver.observe(document.querySelector('article.md-text'));
       }
+
+      // Rebuild cache once when editing ends, if it was marked dirty
+      document.addEventListener('focusout', function () {
+        if (cacheDirty && !isUserEditing()) {
+          cacheDirty = false;
+          cacheVersion++;
+          buildPosCache();
+        }
+      });
 
       // --- rAF-based scroll handling (one update per frame) ---
       let rafPending = false;
@@ -139,6 +183,9 @@ const init = {
 
       function onScrollFrame() {
         rafPending = false;
+
+        // Skip TOC updates entirely when user is editing — prevents scroll interference
+        if (isUserEditing()) return;
 
         // --- PHASE 1: Read (batch all layout reads) ---
         if (!posCache) buildPosCache();
