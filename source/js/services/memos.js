@@ -3,78 +3,132 @@ utils.jq(() => {
 
   els.forEach(el => {
     const api = el.dataset.api;
-    const bearer_token = el.dataset.token;
     if (!api) return;
 
     const default_avatar = el.getAttribute('avatar') || def.avatar;
     const limit = el.getAttribute('limit');
     const host = api.match(/https:\/\/(.*?)\/(.*)/i)[1];
-    const site = api.split('/api/v1')[0];
-
-    // 用户缓存与请求去重，避免重复拉取同一 creator
-    const userCache = [];
-    const userRequests = {};
 
     utils.request(el, api, async resp => {
       const data = await resp.json();
-      // 0.30.x ListMemos 返回 { memos: [...], nextPageToken }
-      const memos = Array.isArray(data?.memos) ? data.memos : [];
-      if (!memos.length) return;
+      let memos = versionHandlers.identify(data);
+      if (memos.version === "feature" )return;
 
       const users = el.getAttribute('user')?.split(",") || [];
       const hide = el.getAttribute('hide')?.split(",") || [];
 
-      await Promise.all(memos.slice(0, limit || memos.length).map(item =>
-          createMemoCell(item, users, hide).then(cell => $(el).append(cell))
+      await Promise.all(memos.data.slice(0, limit || memos.data.length).map(item =>
+          createMemoCell(item, memos, users, hide, default_avatar, host).then(cell => $(el).append(cell))
       ));
     });
 
-    async function createMemoCell(item, users, hide) {
+    async function createMemoCell(item, memos, users, hide, default_avatar, host) {
+      const versionHandler = versionHandlers[memos.version] || versionHandlers["feature"];
       return `<div class="timenode">
-                      <div class="header">${!users.length && !hide.includes('user') ? await buildUser(item) : ''}
-                      <span>${buildDate(item).toLocaleString()}</span></div>
+                      <div class="header">${!users.length && !hide.includes('user') ? await versionHandler.buildUser(item, memos, default_avatar) : ''}
+                      <span>${versionHandler.buildDate(item).toLocaleString()}</span></div>
                       <div class="body">${marked.parse(item.content || '')}
-                      <p>${buildImages(item).join('')}</p>
+                      <p>${versionHandler.buildImages(item, host).join('')}</p>
                       </div></div>`;
     }
 
-    // creator 格式为 "users/{id}"，通过 GetUser 拉取用户信息
-    async function buildUser(item) {
-      const creatorId = item?.creator?.split('/')[1];
-      let user = userCache.find(u => u.name?.split('/')[1] === creatorId);
-      if (!user && creatorId) {
-        if (!userRequests[creatorId]) {
-          userRequests[creatorId] = fetch(`${site}/api/v1/users/${creatorId}`, {
-            headers: bearer_token ? { Authorization: `Bearer ${bearer_token}` } : {}
-          })
-              .then(response => response.json())
-              .then(data => {
-                if (data?.username) userCache.push(data);
-              })
-              .finally(() => delete userRequests[creatorId]);
+    // Memos版本管理
+    const versionHandlers = {
+      "22-": {
+        buildUser: async (item, memos, default_avatar) =>
+            `<div class="user-info">${default_avatar ? `<img src="${default_avatar}">` : ''}<span>${item.creatorName}</span></div>`,
+        buildDate: item => new Date(item.createdTs * 1000),
+        buildImages: (item, host) => (item.resourceList || []).filter(res => res.type?.includes('image/')).map(res =>
+            `<p><img src="${res.externalLink || `https://${host}/o/r/${res.id}`}"></p>`
+        )
+      },
+      "22+": {
+        buildUser: async (item, memos, default_avatar) => {
+          const creatorId = item?.creator.split('/')[1];
+          let user = memos.users.find(user => user.id === parseInt(creatorId));
+          if (!user) {
+            if (!memos.requests[creatorId]) {
+              memos.requests[creatorId] = fetch(`${memos.site}/api/v1/users/${creatorId}`)
+                  .then(response => response.json())
+                  .then(data => {
+                    if (data.username) {
+                      user = data;
+                      memos.users.push(data);
+                    } else {
+                      user = null;
+                    }
+                  })
+                  .finally(() => delete memos.requests[creatorId]);
+            }
+            await memos.requests[creatorId];
+            user = memos.users.find(user => user.id === parseInt(creatorId));
+          }
+          const name = user ? user.nickname || user.username : 'memos';
+          const avatarUrl = user?.avatarUrl ? `${memos.site}${user.avatarUrl}` : default_avatar || '';
+          return `<div class="user-info">${avatarUrl ? `<img src="${avatarUrl}">` : ''}<span>${name}</span></div>`;
+        },
+        buildDate: item => new Date(item.createTime),
+        buildImages: (item) => (item.resources || []).filter(res => res.type?.includes('image/')).map(res =>
+            `<p><img src="${res.externalLink || `https://${host}/o/r/${res.id}`}"></p>`
+        )
+      },
+      "25+": {
+        buildUser: async (item, memos, default_avatar) => {
+          const creatorId = item?.creator.split('/')[1];
+          let user = memos.users.find(user => user.name.split('/')[1] === creatorId);
+          if (!user) {
+            if (!memos.requests[creatorId]) {
+              memos.requests[creatorId] = fetch(`${memos.site}/api/v1/users/${creatorId}`)
+                  .then(response => response.json())
+                  .then(data => {
+                    if (data.username) {
+                      user = data;
+                      memos.users.push(data);
+                    } else {
+                      user = null;
+                    }
+                  })
+                  .finally(() => delete memos.requests[creatorId]);
+            }
+            await memos.requests[creatorId];
+            user = memos.users.find(user => user.name.split('/')[1] === creatorId);
+          }
+          console.log(JSON.stringify(user));
+          const name = user ? user.displayName || user.username : 'memos';
+          const avatarUrl = user?.avatarUrl ? `${memos.site}${user.avatarUrl}` : default_avatar || '';
+          return `<div class="user-info">${avatarUrl ? `<img src="${avatarUrl}">` : ''}<span>${name}</span></div>`;
+        },
+        buildDate: item => new Date(item.createTime),
+        buildImages: (item) => (item.attachments || []).filter(res => res.type?.includes('image/')).map(res =>
+            `<div class="image-bg"><img src="${res.externalLink || `https://${host}/file/${res.name}/${res.filename}`}"></div>`
+        )
+      },
+      "feature": {
+        buildUser: async () => "memos",
+        buildDate: () => new Date(),
+        buildImages: () => []
+      },
+      identify: (data) => {
+        let memos = { version: "feature", users: [], site: api.split('/api/v1')[0], requests: {}, data: [] }
+        if (Array.isArray(data)) {
+          memos.version = "22-";
+          memos.data = data;
+          console.log("当前Memos版本为22-");
+        } else if (data.memos && !data.memos[0].attachments) {
+          memos.version = "22+";
+          memos.data = data.memos;
+          console.log("当前Memos版本为22+");
+        } else if (data.memos && data.memos[0].attachments) {
+          memos.version = "25+";
+          memos.data = data.memos;
+          console.log("当前Memos版本为25+");
+        } else {
+          memos.version = "feature";
+          console.log("当前Memos版本过高，请到Stellar社区反馈");
         }
-        await userRequests[creatorId];
-        user = userCache.find(u => u.name?.split('/')[1] === creatorId);
+        return memos
       }
-      const name = user ? user.displayName || user.username : 'memos';
-      const avatarUrl = user?.avatarUrl
-          ? (user.avatarUrl.startsWith('http') ? user.avatarUrl : `${site}${user.avatarUrl}`)
-          : default_avatar || '';
-      return `<div class="user-info">${avatarUrl ? `<img src="${avatarUrl}">` : ''}<span>${name}</span></div>`;
-    }
-
-    function buildDate(item) {
-      return new Date(item.createTime);
-    }
-
-    // 0.30.x 附件字段为 attachments，name 格式 "attachments/{id}"
-    function buildImages(item) {
-      return (item.attachments || [])
-          .filter(res => res.type?.includes('image/'))
-          .map(res => {
-            const src = res.externalLink || `${site}/file/${res.name}/${res.filename}`;
-            return `<div class="image-bg"><img src="${src}"></div>`;
-          });
-    }
+    };
   });
 });
+
