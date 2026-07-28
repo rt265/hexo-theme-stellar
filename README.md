@@ -2,6 +2,8 @@
 
 Stellar 是一个极为强大的综合型 Hexo 主题，包含博客系统、知识库系统、专栏系统、笔记系统，内置海量的标签和动态数据组件。
 
+和上游相比，改进了无障碍，使得站点符合 WCGA 要求；同时放弃部分兼容性。
+
 ## 亮点
 
 - 支持技术/生活文章布局风格，为不同类型的文章使用不同的风格。
@@ -22,16 +24,15 @@ Stellar 是一个极为强大的综合型 Hexo 主题，包含博客系统、知
 
 [![Stargazers over time](https://starchart.cc/xaoxuu/hexo-theme-stellar.svg)](https://starchart.cc/xaoxuu/hexo-theme-stellar)
 
-
 ## Getting Started
 
 Check your environment:
 
 ```yaml
-Hexo: 6.3.0 ~ latest
-hexo-cli: 4.3.0 ~ latest
-node: 14.17.3 ～ latest LTS # 建议选择 LTS 版本，过高的版本 hexo 还没有进行兼容。
-npm: 6.14.13 ~ latest
+Hexo: latest
+hexo-cli: latest
+node: latest LTS # 建议选择 LTS 版本，过高的版本 hexo 还没有进行兼容。
+npm: latest
 ```
 
 Edit your `_config.yml`:
