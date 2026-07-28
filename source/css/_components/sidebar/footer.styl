@@ -3,21 +3,44 @@
 
 .social-wrap
   display: grid
-  grid-gap: 0.25rem 0.25rem
-  grid-template-columns: repeat(auto-fill, 32px)
+  gap: 0.25rem
+  grid-template-columns: repeat(auto-fill, 44px)
   text-align: center
   .social
-    line-height: 0
-    display: inline-block
+    width: 32px
+    height: 32px
+    display: inline-flex
+    align-items: center
+    justify-content: center
     padding: 6px
-    border-radius: 32px
-    filter: grayscale(100%)
+    border: none
+    outline: none
+    appearance: none
+    font: inherit
+    color: inherit
+    cursor: pointer
+    text-decoration: none
+    border-radius: 50%
     overflow: hidden
     background: transparent
+    filter: grayscale(100%)
     trans3: box-shadow background transform
     &:hover
       z-index: 1
-      filter: unset
+      filter: none
       background: var(--bg-a100)
+    &:focus-visible
+      z-index: 2
+      outline: 2px solid var(--primary-color)
+      outline-offset: 2px
+    &:active
+      transform: scale(0.92)
+    svg
+      width: 32px
+      height: 32px
+      flex-shrink: 0
+      vertical-align: middle
     img
+      width: 32px
+      height: 32px
       border-radius: 2px
