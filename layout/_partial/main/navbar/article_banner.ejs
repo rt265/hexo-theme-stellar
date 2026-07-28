@@ -111,7 +111,7 @@ function layoutDiv() {
   var el = ``
   el += `<div class="article banner${scrollreveal(' ')} top">`
   if (banner.url?.length > 0) {
-    el += `<img class="lazy bg" data-src="${banner.url}">`
+    el += `<img class="lazy bg" data-src="${banner.url}" alt="文章横幅">`
     if (banner.color) {
       style += ' style="--text-banner:' + banner.color + '"'
     }
