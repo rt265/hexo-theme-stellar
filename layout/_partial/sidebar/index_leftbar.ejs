@@ -120,13 +120,7 @@ function layoutFooterDiv() {
   for (let id of Object.keys(social)) {
     let item = social[id];
     if (item.icon && (item.url || item.onclick)) {
-      let tag = item.url ? 'a' : 'button';
-      let name = item?.name || '';
-      el += '<' + tag + ' class="social"';
-      if (tag === 'button') {
-        el += ' type="button"';
-        el += ' aria-label="' + name + '"';
-      }
+      el += '<a class="social"';
       if (item.title) {
         el += ' title="' + item.title + '"';
       }
@@ -143,7 +137,7 @@ function layoutFooterDiv() {
       }
       el += '>';
       el += icon(item.icon, 'no-lazy');
-      el += '</' + tag + '>';
+      el += '</a>';
     }
   }
   el += '</div>';
