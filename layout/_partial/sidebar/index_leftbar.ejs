@@ -121,9 +121,11 @@ function layoutFooterDiv() {
     let item = social[id];
     if (item.icon && (item.url || item.onclick)) {
       let tag = item.url ? 'a' : 'button';
+      let name = item?.name || '';
       el += '<' + tag + ' class="social"';
       if (tag === 'button') {
         el += ' type="button"';
+        el += ' aria-label="' + name + '"';
       }
       if (item.title) {
         el += ' title="' + item.title + '"';
