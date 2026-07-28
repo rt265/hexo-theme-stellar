@@ -154,6 +154,10 @@ table:not([class])
   &.ini .code:before
     content: "ini"
 
+  &.x86asm code:before
+    content: "x86asm"
+  &.armasm code:before
+    content: "armasm"
   &.c .code:before
     content: "C"
   &.cpp .code:before
@@ -162,6 +166,8 @@ table:not([class])
     content: "Objective-C"
   &.swift .code:before
     content: "Swift"
+  &.cs .code:before
+    content: "C#"
 
   &.java .code:before
     content: "Java"
@@ -185,8 +191,6 @@ table:not([class])
     content: "MATLAB"
   &.nginx .code:before
     content: "Nginx"
-
-
 
 $hl-keyword = #8959a8
 $hl-blue = #1E80F0
