@@ -181,7 +181,11 @@ utils.jq(() => {
 
   const observer = new MutationObserver(function(mutationsList) {
     const hasResults = $resultArea.querySelector(".search-result-list li");
-    $('.search-wrapper').toggleClass('noresult', !hasResults);
+    if (hasResults) {
+      $('.search-wrapper').removeClass('noresult');
+    } else {
+      $('.search-wrapper').addClass('noresult');
+    }
   });
   observer.observe($resultArea, { childList: true, subtree: true });
 });

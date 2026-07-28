@@ -78,7 +78,12 @@ utils.js(window.searchConfig.js)
 
     const observer = new MutationObserver(mutationsList => {
       if (mutationsList.length === 1) {
-        $searchWrapper.toggleClass('noresult', !mutationsList[0].addedNodes.length);
+        const hasResults = mutationsList[0].addedNodes.length > 0;
+        if (hasResults) {
+          $searchWrapper.removeClass('noresult');
+        } else {
+          $searchWrapper.addClass('noresult');
+        }
       }
     });
 
