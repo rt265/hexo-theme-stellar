@@ -16,7 +16,7 @@ function createCopyButtons(codeElements) {
           codeCopyBtn.textContent = ctx.copycode.success_text;
           codeCopyBtn.classList.add('success');
           hud.toast(ctx.copycode.toast, 2500);
-        } catch (error) {
+        } catch {
           codeCopyBtn.textContent = '未获得用户许可';
           codeCopyBtn.classList.add('warning');
         }

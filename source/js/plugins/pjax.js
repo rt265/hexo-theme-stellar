@@ -102,12 +102,12 @@
   function isWidgetIdentical(oldW, newW) {
     // 1. 快速检查：如果是同一个节点，直接返回
     if (oldW === newW) return true;
-    
+
     // 2. 检查 widget ID 或类型
     const oldId = oldW.id || oldW.getAttribute('data-widget-id');
     const newId = newW.id || newW.getAttribute('data-widget-id');
     if (oldId && newId && oldId !== newId) return false;
-    
+
     // 3. 检查 data-service 标识（动态内容）
     const oldDS = oldW.classList.contains('data-service') ? oldW : oldW.querySelector('.data-service');
     const newDS = newW.classList.contains('data-service') ? newW : newW.querySelector('.data-service');
@@ -117,7 +117,7 @@
       // 如果 API 相同，保留旧内容（可能已加载数据）
       if (oldApi && newApi && oldApi === newApi) return true;
     }
-    
+
     // 4. 最后才使用 isEqualNode（比 innerHTML 更快）
     return oldW.isEqualNode(newW);
   }
@@ -132,7 +132,7 @@
       // Remove data-theme from new attributes to prevent overwriting user's saved theme
       const attrsToSync = { ...newHtmlAttrs };
       delete attrsToSync['data-theme'];
-      
+
       // Sync all attributes
       Object.keys(attrsToSync).forEach(attrName => {
         const newValue = attrsToSync[attrName];
@@ -141,7 +141,7 @@
           document.documentElement.setAttribute(attrName, newValue);
         }
       });
-      
+
       // Remove attributes that exist in current html but not in new html (except data-theme)
       Array.from(document.documentElement.attributes).forEach(attr => {
         if (attr.name !== 'data-theme' && !(attr.name in attrsToSync)) {
@@ -149,7 +149,7 @@
         }
       });
     }
-    
+
     if (contents.title) document.title = contents.title;
     if (contents._bodyClasses) document.body.className = contents._bodyClasses;
 
@@ -187,7 +187,7 @@
                     const savedScrollTop = op.scrollTop || 0;
                     const oldChildren = Array.from(op.children);
                     const newChildren = Array.from(np.children);
-                    
+
                     // Simple positional merger for performance and order preservation
                     const maxLength = Math.max(oldChildren.length, newChildren.length);
                     for (let i = 0; i < maxLength; i++) {
@@ -356,18 +356,18 @@
       if (scriptContent.includes('window.stellar.initComments')) {
         // Create and execute a new script element
         const newScript = document.createElement('script');
-        
+
         // Copy all attributes including type="module" if present
         Array.from(oldScript.attributes).forEach(attr => {
           newScript.setAttribute(attr.name, attr.value);
         });
-        
+
         // For module scripts, we need to use a blob URL to preserve import statements
         if (oldScript.type === 'module') {
           const blob = new Blob([scriptContent], { type: 'text/javascript' });
           const url = URL.createObjectURL(blob);
           newScript.src = url;
-          
+
           // Clean up blob URL and script element after loading (or on error)
           const cleanup = () => {
             URL.revokeObjectURL(url);
@@ -380,7 +380,7 @@
           newScript.textContent = scriptContent;
           // Script executes synchronously when appended, so we can remove it immediately
         }
-        
+
         // Execute by appending to document
         document.head.appendChild(newScript);
       }
@@ -407,18 +407,18 @@
       const currentWikiCover = document.querySelector('#l_cover .l_cover.wiki');
       const startEl = document.getElementById('start');
       let scrollPromise = Promise.resolve();
-      
+
       if (currentWikiCover && startEl && !isPop) {
         // Scroll to #start so content slides up to top (pushing cover out of view)
         const rect = startEl.getBoundingClientRect();
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         const targetTop = rect.top + scrollTop;
-        
+
         // Only animate if we are not already there
         if (Math.abs(scrollTop - targetTop) > 5) {
-           window.scrollTo({ top: targetTop, behavior: 'smooth' });
-           // Wait for approx 400ms for scroll animation
-           scrollPromise = new Promise(resolve => setTimeout(resolve, 400));
+          window.scrollTo({ top: targetTop, behavior: 'smooth' });
+          // Wait for approx 400ms for scroll animation
+          scrollPromise = new Promise(resolve => setTimeout(resolve, 400));
         }
       }
 
@@ -449,7 +449,7 @@
         // 否则滚动到顶部
         const wikiCover = document.querySelector('#l_cover .l_cover.wiki');
         const newStartEl = document.getElementById('start');
-        
+
         if (wikiCover && newStartEl) {
           // 立即跳转到目标位置，不使用动画（避免与导航前的滚动冲突）
           const rect = newStartEl.getBoundingClientRect();
@@ -514,10 +514,10 @@
 
     try {
       const url = new URL(link.href);
-      return url.origin === currentUrl.origin && 
-             url.pathname === currentUrl.pathname && 
-             !!url.hash;
-    } catch (e) {
+      return url.origin === currentUrl.origin &&
+        url.pathname === currentUrl.pathname &&
+        !!url.hash;
+    } catch {
       return false;
     }
   }
@@ -530,7 +530,7 @@
     const rawId = hash.slice(1);
     try {
       return decodeURIComponent(rawId);
-    } catch (e) {
+    } catch {
       // If decoding fails, use the original value
       return rawId;
     }
@@ -542,12 +542,12 @@
   function scrollToElement(element, hash) {
     const rect = element.getBoundingClientRect();
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    
+
     window.scrollTo({
       top: rect.top + scrollTop,
       behavior: 'smooth'
     });
-    
+
     // Update URL hash without scrolling again
     history.pushState(null, '', hash);
   }
@@ -563,15 +563,15 @@
       const url = new URL(link.href);
       const targetId = decodeHashId(url.hash);
       const target = document.getElementById(targetId);
-      
+
       if (target) {
         scrollToElement(target, url.hash);
         return true;
       }
-    } catch (e) {
+    } catch {
       // Invalid URL, let it fall through
     }
-    
+
     return false;
   }
 
@@ -580,7 +580,7 @@
    */
   function handleClick(event) {
     const link = findAnchorElement(event.target);
-    
+
     // Handle in-page hash links FIRST (before shouldHandleLink check)
     // This prevents page reloads when clicking table of contents in wiki mode
     const currentUrl = new URL(window.location.href);
