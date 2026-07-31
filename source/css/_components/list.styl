@@ -104,11 +104,13 @@
   .cover
     position: relative
     line-height: 0
+    min-height: 80px
     img
       width: 100%
       object-fit: cover
       aspect-ratio: hexo-config('article.cover_ratio') 
       z-index 0
+      display: block
     &:before
       content: ''
       z-index 1
