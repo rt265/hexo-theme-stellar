@@ -19,6 +19,9 @@ if hexo-config('plugins.pjax.enable')
 
 if hexo-config('plugins.katex.enable')
   @import 'katex'
+if hexo-config('plugins.waveformplayer.enable')
+  @import 'waveformplayer'
+
 
 // 评论
 if hexo-config('comments.service') == 'beaudar' or index(hexo-config('comments.custom_css'), 'beaudar') >= 0

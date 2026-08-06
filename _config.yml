@@ -638,6 +638,14 @@ plugins:
     css: https://unpkg.com/heti@0.9/umd/heti.min.css
     js: https://unpkg.com/heti@0.9/umd/heti-addon.min.js
 
+  # WaveformPlayer - Beautiful audio visualization
+  # https://waveformplayer.com/
+  # https://github.com/arraypress/waveform-player
+  waveformplayer:
+    enable: # 在特定文章的 front-matter 中设置 waveformplayer: true 来开启，也可以在这里设置全局开启
+    js: https://cdn.jsdelivr.net/npm/@arraypress/waveform-player@1.24.0/dist/waveform-player.min.js
+    css: https://cdn.jsdelivr.net/npm/@arraypress/waveform-player@1.24.0/dist/waveform-player.css
+
 style:
   prefers_theme: auto # auto / light / dark
   smooth_scroll: true # true / false 开启时如果目录过长可能无法准确定位
