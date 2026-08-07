@@ -53,8 +53,8 @@ meta:
 
 page:
   error:
-    what: 很抱歉，您访问的页面不存在
-    why: 可能是输入地址有误或该地址已被删除
+    what: 哎哟？页面不见了！
+    why: 可能是输入地址有误或已被删除
     action: 返回主页
 
 search:

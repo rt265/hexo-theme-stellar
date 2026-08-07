@@ -53,7 +53,7 @@ meta:
 
 page:
   error:
-    what: Page Not Found
+    what: Oops! Page Not Found
     why: The address may be entered incorrectly or the address has been deleted.
     action: Back to Home
 

@@ -53,7 +53,7 @@ meta:
 
 page:
   error:
-    what: 抱歉，找不到您存取的頁面
+    what: 哎呀？頁面不見了！
     why: 可能是網址有誤或已經刪除
     action: 返回首頁
 
