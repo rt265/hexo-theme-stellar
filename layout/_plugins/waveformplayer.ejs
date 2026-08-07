@@ -1,4 +1,40 @@
 <script>
   utils.css(`<%- conf.css %>`);
   utils.js(`<%- conf.js %>`);
+
+  // Initialize WaveformPlayer
+  function initWaveformPlayer() {
+    if (typeof WaveformPlayer !== 'undefined') {
+      // Find all audio elements with waveform attribute that haven't been initialized
+      const audioElements = document.querySelectorAll('audio[waveform]:not([data-waveform-initialized])');
+      audioElements.forEach(audio => {
+        try {
+          // Mark as initialized to prevent duplicate initialization
+          audio.setAttribute('data-waveform-initialized', 'true');
+          // Initialize the waveform player
+          new WaveformPlayer(audio);
+        } catch (error) {
+          console.error('WaveformPlayer initialization error:', error);
+        }
+      });
+    }
+  }
+
+  // Initialize on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initWaveformPlayer);
+  } else {
+    initWaveformPlayer();
+  }
+
+  // Re-initialize after PJAX navigation
+  document.addEventListener('pjax:complete', function() {
+    // Wait for the script to be loaded
+    if (typeof WaveformPlayer !== 'undefined') {
+      initWaveformPlayer();
+    } else {
+      // If WaveformPlayer is not loaded yet, wait a bit and try again
+      setTimeout(initWaveformPlayer, 100);
+    }
+  });
 </script>
