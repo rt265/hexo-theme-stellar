@@ -1,40 +1,58 @@
 <script>
+  // Load CSS and JS
   utils.css(`<%- conf.css %>`);
   utils.js(`<%- conf.js %>`);
 
-  // Initialize WaveformPlayer
-  function initWaveformPlayer() {
-    if (typeof WaveformPlayer !== 'undefined') {
-      // Find all audio elements with waveform attribute that haven't been initialized
-      const audioElements = document.querySelectorAll('audio[waveform]:not([data-waveform-initialized])');
+  // Initialize plugin with automatic PJAX support
+  utils.initPlugin(() => {
+    // Wait for WaveformPlayer to be available
+    if (typeof WaveformPlayer === 'undefined') {
+      console.warn('WaveformPlayer not loaded yet, will retry...');
+      return;
+    }
+
+    // First, destroy any existing waveform players
+    const existingPlayers = document.querySelectorAll('.waveform-player');
+    existingPlayers.forEach(player => {
+      const audio = player.querySelector('audio[waveform]');
+      if (audio && audio.waveformPlayer) {
+        try {
+          audio.waveformPlayer.destroy();
+        } catch (e) {
+          console.warn('Error destroying waveform player:', e);
+        }
+      }
+    });
+
+    // Then initialize new ones
+    const audioElements = document.querySelectorAll('audio[waveform]');
+    if (audioElements.length > 0) {
       audioElements.forEach(audio => {
         try {
-          // Mark as initialized to prevent duplicate initialization
-          audio.setAttribute('data-waveform-initialized', 'true');
-          // Initialize the waveform player
-          new WaveformPlayer(audio);
+          // Always create new instance after cleanup
+          const player = new WaveformPlayer(audio);
+          // Store reference for cleanup
+          audio.waveformPlayer = player;
         } catch (error) {
           console.error('WaveformPlayer initialization error:', error);
         }
       });
     }
-  }
 
-  // Initialize on page load
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initWaveformPlayer);
-  } else {
-    initWaveformPlayer();
-  }
-
-  // Re-initialize after PJAX navigation
-  document.addEventListener('pjax:complete', function() {
-    // Wait for the script to be loaded
-    if (typeof WaveformPlayer !== 'undefined') {
-      initWaveformPlayer();
-    } else {
-      // If WaveformPlayer is not loaded yet, wait a bit and try again
-      setTimeout(initWaveformPlayer, 100);
-    }
-  });
+    // Return cleanup function
+    return () => {
+      const players = document.querySelectorAll('.waveform-player');
+      players.forEach(player => {
+        const audio = player.querySelector('audio[waveform]');
+        if (audio && audio.waveformPlayer) {
+          try {
+            audio.waveformPlayer.destroy();
+            delete audio.waveformPlayer;
+          } catch (e) {
+            // Ignore destroy errors
+          }
+        }
+      });
+    };
+  }, 'waveformplayer');
 </script>
