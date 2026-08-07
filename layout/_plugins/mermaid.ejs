@@ -2,7 +2,7 @@
 <script>
   utils.initPlugin(() => {
     const els = document.querySelectorAll('.mermaid');
-    if (els.length > 0) {
+    if (els.length > 0 && typeof mermaid !== 'undefined') {
       const mermaid_config = {
         startOnLoad: false,
         theme:
@@ -27,7 +27,9 @@
         }
       }
       mermaid.initialize(mermaid_config);
-      mermaid.run();
+      mermaid.run({
+        nodes: els
+      });
     }
   }, 'mermaid');
 </script>
