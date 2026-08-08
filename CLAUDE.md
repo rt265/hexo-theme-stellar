@@ -1,5 +1,7 @@
 # Stellar Theme Development
 
+> 仓库职责与协作边界见 [AGENTS.md](AGENTS.md)；本文件为详细开发规范。
+
 这是 Hexo 主题 **Stellar** 的仓库。主题是一个独立的 npm 包，用于 [hexo-theme-stellar](https://github.com/xaoxuu/hexo-theme-stellar)。
 
 ## 技术栈
@@ -134,8 +136,22 @@ module.exports = function(hexo) {
 
 ### 4. 文档归档
 
-- 方案、执行计划、测试记录保存在 `docs/` 目录
-- 文件命名: `docs/{YYYY-MM-DD}-{功能简称}.md`
+文档统一存放在 `docs/` 目录，按内容类型分三个子文件夹：
+
+```
+docs/
+├── audits/              # 代码审计、分析报告
+├── designs/             # 设计方案、技术方案
+└── guides/              # 流程指南、操作手册
+```
+
+| 文件夹 | 用途 | 示例 |
+|--------|------|------|
+| `audits/` | 代码质量审计、安全性分析、架构评估 | `2026-08-08-stellar-analysis.md` |
+| `designs/` | 功能设计方案、重构方案、技术选型 | `2026-08-08-pjax-removal-and-pretty-urls-fix.md` |
+| `guides/` | 发版流程、操作手册、新手指南 | `release-process.md` |
+
+- 文件命名: `{YYYY-MM-DD}-{功能简称}.md`，流程性文档可不带日期
 - 涉及逻辑变更（API、配置项、行为变化）必须同步更新仓库 Wiki
 
 ### 新增功能 Checklist
@@ -181,28 +197,39 @@ module.exports = function(hexo) {
 
 ## 发版规范
 
-使用 [release-please](https://github.com/googleapis/release-please) 自动化发版，详见 [docs/release-process.md](docs/release-process.md)。
+发版分两步：Node 脚本完成版本号更新和推送 → 手动触发 CI 完成 npm 发布和 tag 创建。
 
 ```
-日常 push main → release-please 创建 Release PR → 合并 PR → GitHub Release + tag → 手动触发 npm publish
+npm run release → push main + npm → 手动触发 CI → npm publish + git tag
 ```
 
-### 版本号由 commit 类型决定
+### 使用方式
 
-| Commit 类型 | 版本变化 | 示例 |
-|------------|---------|------|
-| `fix:` / `perf:` | patch (`z+1`) | 1.33.1 → 1.33.2 |
-| `feat:` | minor (`y+1`) | 1.33.1 → 1.34.0 |
-| `feat!:` / `BREAKING CHANGE:` | major (`x+1`) | 1.33.1 → 2.0.0 |
+```bash
+# 交互式发版（提示输入版本号，提交前二次确认）
+npm run release
 
-`refactor:` / `style:` / `docs:` / `chore:` 不触发版本号变化。
+# 显式指定版本号
+npm run release -- 1.34.1
+
+# 非交互环境发版（必须显式传版本号，并用 --yes 确认）
+npm run release -- 1.34.1 --yes
+
+# 预演模式（仅显示改动，不提交/推送，执行后自动恢复）
+npm run release:dry -- 1.34.1
+```
 
 ### AI 调用指南
 
-1. 按 conventional commits 规范提交代码（`feat:` / `fix:` 等）
-2. push 到 main 后，release-please 自动分析并创建 Release PR
-3. 提醒用户在 GitHub 上 review 并合并 Release PR
-4. 合并后提醒用户手动触发 [npm-publish](https://github.com/xaoxuu/hexo-theme-stellar/actions/workflows/npm-publish.yml) workflow
+1. **分析变更确定版本号**: 查看上一版本以来的 commit，按以下规则确定版本号：
+   - `x.y.z` → `x.y.(z+1)`: 仅含 fix / perf / style（修复和优化，安全升级）
+   - `x.y.z` → `x.(y+1).0`: 含 feat / refactor / breaking change（功能增减、一般重构）
+   - `x.y.z` → `(x+1).0.0`: 大型重构，用户可感知的设计调整
+   - `x.y.z` → `x.y.z-rc.N`: 测试版本
+2. **向用户确认**: 列出版本号和变更摘要，等待用户确认后再继续
+3. **dry-run 预览**: `npm run release:dry -- <version>` 检查变更是否正确
+4. **正式执行**: `npm run release -- <version>`，提交前脚本会二次确认
+5. **手动触发 CI**: 推送完成后手动触发 npm-publish workflow（默认 ref 为 npm），CI 负责 npm publish 与 tag 创建
 
 ## 约束
 
