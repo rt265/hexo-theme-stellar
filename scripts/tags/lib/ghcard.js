@@ -2,19 +2,19 @@
  * friends.js v1 | https://github.com/xaoxuu/hexo-theme-stellar/
  * 格式与官方标签插件一致使用空格分隔，中括号内的是可选参数（中括号不需要写出来）
  *
- * {% ghcard user/repo [theme:xxx] %} or {% ghcard user %}
+ * {% ghcard user/repo [theme:xxx] [other parameters] %} or {% ghcard user %}
  *
  * example:
  * {% ghcard xaoxuu %}
  * {% ghcard xaoxuu/hexo-theme-stellar %}
  *
- * API: https://github.com/anuraghazra/github-readme-stats
+ * API: https://github.com/stats-organization/github-stats-extended
  */
 
 'use strict'
 
-module.exports = ctx => function(args) {
-  var params = ['show_owner', 'theme', 'title_color', 'text_color', 'icon_color', 'bg_color', 'hide_border', 'cache_seconds', 'locale']
+module.exports = ctx => function (args) {
+  var params = ['show_owner', 'theme', 'show_icons', 'title_color', 'text_color', 'icon_color', 'bg_color', 'hide_border', 'cache_seconds', 'locale']
   args = ctx.args.map(args, params, ['repo'])
   const path = args.repo
   const host = ctx.theme.config.api_host.ghcard
