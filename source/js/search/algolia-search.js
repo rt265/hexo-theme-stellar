@@ -6,8 +6,7 @@ utils.js(window.searchConfig.js).then(() => {
 
   var resultArea = document.querySelector("#search-result");
   var searchWrapper = document.querySelector("#search-wrapper");
-  var client = algoliasearch(window.searchConfig.appId, window.searchConfig.apiKey);
-  var index = client.initIndex(window.searchConfig.indexName);
+  var client = algoliasearch.algoliasearch(window.searchConfig.appId, window.searchConfig.apiKey);
 
   function filterResults(hits, filterPath) {
     if (!filterPath || filterPath === '/') return hits;
@@ -22,7 +21,7 @@ utils.js(window.searchConfig.js).then(() => {
       searchWrapper.classList.add('noresult');
     } else {
       searchWrapper.classList.remove('noresult');
-      hits.forEach(function(hit) {
+      hits.forEach(function (hit) {
         var contentSnippet = hit._snippetResult.content.value;
         var title = hit.hierarchy.lvl1 || 'Untitled';
         var item = document.createElement("li");
@@ -33,7 +32,7 @@ utils.js(window.searchConfig.js).then(() => {
     resultArea.replaceChildren(resultList);
   }
 
-  inputArea.addEventListener("input", function() {
+  inputArea.addEventListener("input", function () {
     var query = inputArea.value.trim();
     var filterPath = inputArea.getAttribute('data-filter');
 
@@ -45,25 +44,29 @@ utils.js(window.searchConfig.js).then(() => {
 
     searchWrapper.setAttribute('searching', 'true');
 
-    index.search(query, {
-      hitsPerPage: window.searchConfig.hitsPerPage,
-      attributesToHighlight: ['content'],
-      attributesToSnippet: ['content:30'],
-      highlightPreTag: '<span class="search-keyword">',
-      highlightPostTag: '</span>',
-      restrictSearchableAttributes: ['content']
-    }).then(function(responses) {
+    client.searchSingleIndex({
+      indexName: window.searchConfig.indexName,
+      searchParams: {
+        query: query,
+        hitsPerPage: window.searchConfig.hitsPerPage,
+        attributesToHighlight: ['content'],
+        attributesToSnippet: ['content:30'],
+        highlightPreTag: '<span class="search-keyword">',
+        highlightPostTag: '</span>',
+        restrictSearchableAttributes: ['content']
+      }
+    }).then(function (responses) {
       displayResults(filterResults(responses.hits, filterPath));
     });
   });
 
-  inputArea.addEventListener("keydown", function(e) {
+  inputArea.addEventListener("keydown", function (e) {
     if (e.key == 'Enter') {
       e.preventDefault();
     }
   });
 
-  var observer = new MutationObserver(function(mutationsList) {
+  var observer = new MutationObserver(function (mutationsList) {
     if (mutationsList.length === 1) {
       if (mutationsList[0].addedNodes.length) {
         searchWrapper.classList.remove('noresult');
