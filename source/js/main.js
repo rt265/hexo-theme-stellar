@@ -94,45 +94,52 @@ const hud = {
 
 const l_body = document.querySelector('.l_body');
 
-// Helper: check if user is currently editing in an input, textarea, or contenteditable element
-function isUserEditing() {
-  const el = document.activeElement;
-  if (!el) return false;
-  return el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable;
+// TOC 平滑滚动（自定义动画，速度比浏览器原生 behavior:"smooth" 更快）
+let tocScrollAnim = null;
+function tocCancelScroll() {
+  if (tocScrollAnim !== null) {
+    cancelAnimationFrame(tocScrollAnim);
+    tocScrollAnim = null;
+  }
 }
-
-// Fix: disable smooth scrolling while editing to prevent auto-scroll drift
-// When editing long Artalk replies, the editor auto-grows, and scroll-behavior:smooth
-// on <html> causes the browser's focus-scroll adjustment to animate, compounding
-// with each keystroke. We temporarily switch to instant scrolling during edits.
-(function () {
-  var smoothScrollStyle = '';
-  document.addEventListener('focusin', function (_e) {
-    if (isUserEditing()) {
-      smoothScrollStyle = document.documentElement.style.scrollBehavior;
-      document.documentElement.style.scrollBehavior = 'auto';
+function tocSmoothScrollTo(targetY) {
+  tocCancelScroll();
+  const startY = window.scrollY;
+  const diff = targetY - startY;
+  if (Math.abs(diff) < 2) {
+    return;
+  }
+  // 短距离 180ms，长距离最多 350ms
+  const duration = Math.min(350, Math.max(180, Math.abs(diff) * 0.1));
+  const startTime = performance.now();
+  function step(now) {
+    const t = Math.min(1, (now - startTime) / duration);
+    const eased = 1 - Math.pow(1 - t, 3); // easeOutCubic
+    window.scrollTo(0, startY + diff * eased);
+    if (t < 1) {
+      tocScrollAnim = requestAnimationFrame(step);
+    } else {
+      tocScrollAnim = null;
     }
-  });
-  document.addEventListener('focusout', function (_e) {
-    // Delay to let the new activeElement settle (e.g., tabbing between fields)
-    setTimeout(function () {
-      if (!isUserEditing()) {
-        document.documentElement.style.scrollBehavior = smoothScrollStyle;
-      }
-    }, 0);
-  });
-})();
+  }
+  tocScrollAnim = requestAnimationFrame(step);
+}
+window.addEventListener('wheel', tocCancelScroll, { passive: true });
+window.addEventListener('touchstart', tocCancelScroll, { passive: true });
+
 
 const init = {
   toc: () => {
     const scrollOffset = 32;
+    // 滚动位置取整后标题顶可能落在偏移线下方 1~2px，加容差避免高亮回跳到上一条
+    const scrollTolerance = 4;
     var segs = utils.qsa("article.md-text h1, article.md-text h2, article.md-text h3, article.md-text h4, article.md-text h5, article.md-text h6");
     function activeTOC() {
       var scrollTop = window.scrollY;
       var topSeg = null;
       for (var i = 0; i < segs.length; i++) {
         var segTop = segs[i].getBoundingClientRect().top + window.scrollY;
-        if (segTop > scrollTop + scrollOffset) {
+        if (segTop > scrollTop + scrollOffset + scrollTolerance) {
           continue;
         }
         if (!topSeg || segTop >= topSeg.getBoundingClientRect().top + window.scrollY) {
@@ -180,6 +187,18 @@ const init = {
   },
   sidebar: () => {
     utils.dom("#data-toc a.toc-link").click(function (e) {
+      const href = this.getAttribute("href");
+      const id = href && href.indexOf("#") === 0 ? decodeURIComponent(href.slice(1)) : null;
+      const target = id && document.getElementById(id);
+      if (target) {
+        e.preventDefault();
+        const offset = 32; // 与 activeTOC 的 scrollOffset 保持一致
+        const targetY = target.getBoundingClientRect().top + window.scrollY - offset;
+        tocSmoothScrollTo(Math.max(0, targetY));
+        if (window.history && window.history.pushState) {
+          window.history.pushState(null, "", href);
+        }
+      }
       sidebar.dismiss();
     });
   },
