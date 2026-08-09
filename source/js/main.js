@@ -125,143 +125,116 @@ function isUserEditing() {
 
 const init = {
   toc: () => {
-    utils.jq(() => {
-      const SCROLL_OFFSET = 32;
-      const tocContainer = document.querySelector('#data-toc .toc');
-      const tocLinks = document.querySelectorAll('#data-toc a.toc-link');
-
-      // Collect header elements
-      const headerEls = [];
-      const headerElsById = {};
-      document.querySelectorAll('article.md-text h1, article.md-text h2, article.md-text h3, article.md-text h4, article.md-text h5, article.md-text h6').forEach(function (node) {
-        headerEls.push(node);
-        if (node.id) headerElsById[node.id] = node;
-      });
-
-      // --- Position cache (invalidated on resize) ---
-      let posCache = null; // array of { top: number }
-      let cacheVersion = 0;
-      let cacheDirty = false;
-
-      function buildPosCache() {
-        posCache = [];
-        for (var i = 0; i < headerEls.length; i++) {
-          posCache.push({ top: headerEls[i].getBoundingClientRect().top + window.pageYOffset });
+    const scrollOffset = 32;
+    var segs = utils.qsa("article.md-text h1, article.md-text h2, article.md-text h3, article.md-text h4, article.md-text h5, article.md-text h6");
+    function activeTOC() {
+      var scrollTop = window.scrollY;
+      var topSeg = null;
+      for (var i = 0; i < segs.length; i++) {
+        var segTop = segs[i].getBoundingClientRect().top + window.scrollY;
+        if (segTop > scrollTop + scrollOffset) {
+          continue;
+        }
+        if (!topSeg || segTop >= topSeg.getBoundingClientRect().top + window.scrollY) {
+          topSeg = segs[i];
         }
       }
-
-      // Rebuild cache on resize (debounced), skip when user is editing
-      let resizeTimer = null;
-      const resizeObserver = new ResizeObserver(function () {
-        // Skip cache rebuild during editing — Artalk editor growth shouldn't trigger TOC recalc
-        if (isUserEditing()) {
-          cacheDirty = true;
-          return;
-        }
-        if (resizeTimer) clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(function () {
-          cacheVersion++;
-          buildPosCache();
-          cacheDirty = false;
-        }, 200);
-      });
-      if (document.querySelector('article.md-text')) {
-        resizeObserver.observe(document.querySelector('article.md-text'));
-      }
-
-      // Rebuild cache once when editing ends, if it was marked dirty
-      document.addEventListener('focusout', function () {
-        if (cacheDirty && !isUserEditing()) {
-          cacheDirty = false;
-          cacheVersion++;
-          buildPosCache();
-        }
-      });
-
-      // --- rAF-based scroll handling (one update per frame) ---
-      let rafPending = false;
-      let lastActiveId = null; // avoid redundant class toggles
-
-      function onScrollFrame() {
-        rafPending = false;
-
-        // Skip TOC updates entirely when user is editing — prevents scroll interference
-        if (isUserEditing()) return;
-
-        // --- PHASE 1: Read (batch all layout reads) ---
-        if (!posCache) buildPosCache();
-        const scrollTop = window.pageYOffset;
-        let topSegId = null;
-
-        for (var i = headerEls.length - 1; i >= 0; i--) {
-          if (posCache[i].top <= scrollTop + SCROLL_OFFSET) {
-            topSegId = headerEls[i].id;
-            break;
+      if (topSeg) {
+        utils.dom("#data-toc a.toc-link").removeClass("active");
+        var id = topSeg.getAttribute("id");
+        var link = id ? "#" + id : "#undefined";
+        if (link != '#undefined') {
+          const highlightItem = utils.dom('#data-toc a.toc-link[href="' + encodeURI(link) + '"]');
+          if (highlightItem.length > 0) {
+            highlightItem.addClass("active");
           }
-        }
-
-        // --- PHASE 2: Write (batch all DOM writes) ---
-        if (topSegId && topSegId !== lastActiveId) {
-          lastActiveId = topSegId;
-          // Remove active from all, add to target
-          for (var j = 0; j < tocLinks.length; j++) {
-            var href = tocLinks[j].getAttribute('href');
-            if (href === '#' + topSegId) {
-              tocLinks[j].classList.add('active');
-            } else {
-              tocLinks[j].classList.remove('active');
-            }
-          }
-        } else if (!topSegId && lastActiveId !== null) {
-          lastActiveId = null;
-          for (var k = 0; k < tocLinks.length; k++) {
-            tocLinks[k].classList.remove('active');
-          }
-          if (tocLinks.length > 0) tocLinks[0].classList.add('active');
-        }
-
-        // --- scrollTOC: keep active link in view ---
-        if (tocContainer && lastActiveId) {
-          const activeLink = tocContainer.querySelector('a.toc-link.active');
-          if (activeLink) {
-            // Batch bounding rect reads
-            const containerRect = tocContainer.getBoundingClientRect();
-            const linkRect = activeLink.getBoundingClientRect();
-            const offsetTop = linkRect.top - containerRect.top - 64;
-            const offsetBottom = linkRect.bottom - containerRect.bottom + 100;
-
-            if (offsetTop < 0) {
-              tocContainer.scrollBy({ top: offsetTop, behavior: 'auto' });
-            } else if (offsetBottom > 0) {
-              tocContainer.scrollBy({ top: offsetBottom, behavior: 'auto' });
-            }
-          }
+        } else {
+          const first = utils.qs('#data-toc a.toc-link');
+          if (first) first.classList.add("active");
         }
       }
-
-      function scheduleScrollUpdate() {
-        if (!rafPending) {
-          rafPending = true;
-          requestAnimationFrame(onScrollFrame);
-        }
+    }
+    function scrollTOC() {
+      const e0 = document.querySelector('#data-toc .toc');
+      const e1 = document.querySelector('#data-toc .toc a.toc-link.active');
+      if (e0 == null || e1 == null) {
+        return;
       }
+      const offsetBottom = e1.getBoundingClientRect().bottom - e0.getBoundingClientRect().bottom + 100;
+      const offsetTop = e1.getBoundingClientRect().top - e0.getBoundingClientRect().top - 64;
+      if (offsetTop < 0) {
+        e0.scrollBy({ top: offsetTop, behavior: "smooth" });
+      } else if (offsetBottom > 0) {
+        e0.scrollBy({ top: offsetBottom, behavior: "smooth" });
+      }
+    }
 
-      // Listen for scroll with passive:true for better performance
-      window.addEventListener('scroll', scheduleScrollUpdate, { passive: true });
-
-      // Invalidate position cache on window resize
-      window.addEventListener('resize', function () {
-        cacheVersion++;
-        buildPosCache();
-      });
-    })
+    var timeout = null;
+    window.addEventListener('scroll', function () {
+      activeTOC();
+      if (timeout !== null) clearTimeout(timeout);
+      timeout = setTimeout(function () {
+        scrollTOC();
+      }, 50);
+    });
   },
   sidebar: () => {
-    utils.jq(() => {
-      $("#data-toc a.toc-link").click(function (e) {
-        sidebar.dismiss();
-      });
-    })
+    utils.dom("#data-toc a.toc-link").click(function (e) {
+      sidebar.dismiss();
+    });
+  },
+  leftbarScroll: () => {
+    const container = document.querySelector('.l_left .widgets');
+    if (container == null) {
+      return;
+    }
+    const PREFIX = 'Stellar.leftbarScroll.';
+    const encode = (s) => encodeURIComponent(String(s || ''));
+    function scope() {
+      const wikiEl = document.querySelector('.doc-tree[data-wiki]');
+      if (wikiEl != null) {
+        return 'wiki:' + encode(wikiEl.getAttribute('data-wiki'));
+      }
+      const notebookEl = document.querySelector('widget[data-notebook]');
+      if (notebookEl != null) {
+        return 'notebook:' + encode(notebookEl.getAttribute('data-notebook'));
+      }
+      const body = document.querySelector('.l_body');
+      return 'layout:' + encode((body && body.getAttribute('layout')) || 'default');
+    }
+    window.addEventListener('pagehide', function () {
+      try {
+        const s = scope();
+        sessionStorage.setItem(PREFIX + s, String(container.scrollTop));
+        sessionStorage.setItem(PREFIX + 'last', s);
+      } catch (e) {}
+    });
+    try {
+      const s = scope();
+      // 仅当上一页与当前页属于同一分区时才恢复，离开分区后再回来不跳回旧位置
+      if (sessionStorage.getItem(PREFIX + 'last') !== s) {
+        return;
+      }
+      const value = sessionStorage.getItem(PREFIX + s);
+      if (value == null) {
+        return;
+      }
+      container.scrollTop = parseInt(value, 10) || 0;
+      const link = container.querySelector('a.link.active');
+      if (link == null) {
+        return;
+      }
+      const padding = 16;
+      const containerRect = container.getBoundingClientRect();
+      const linkRect = link.getBoundingClientRect();
+      const top = linkRect.top - containerRect.top;
+      const bottom = linkRect.bottom - containerRect.top;
+      if (top < 0) {
+        container.scrollTop += top - padding;
+      } else if (bottom > container.clientHeight) {
+        container.scrollTop += bottom - container.clientHeight + padding;
+      }
+    } catch (e) {}
   },
   relativeDate: (selector) => {
     selector.forEach(item => {
@@ -399,7 +372,8 @@ window.stellar = window.stellar || {};
 stellar.initPage = function () {
   init.toc();
   init.sidebar();
-  init.relativeDate(document.querySelectorAll('.post-meta time'));
+  init.leftbarScroll();
+  init.relativeDate(document.querySelectorAll('#post-meta time'));
   init.registerTabsTag();
 
   // Reinitialize comments after PJAX navigation
@@ -415,4 +389,3 @@ stellar.initPage = function () {
 // Initial page load
 stellar.initPage();
 init.canonicalCheck();
-

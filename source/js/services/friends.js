@@ -1,6 +1,5 @@
-utils.jq(() => {
-  $(function () {
-    const els = document.getElementsByClassName('ds-friends');
+(function () {
+  const els = document.getElementsByClassName('ds-friends');
     for (var i = 0; i < els.length; i++) {
       const el = els[i];
       const api = el.dataset.api;
@@ -38,11 +37,11 @@ utils.jq(() => {
             labelDiv.textContent = label.name || '';
             link.appendChild(labelDiv);
           }
-          cell.appendChild(link);
-          $(el).find('.grid-box').append(cell);
+          cell += `</a>`;
+          cell += `</div>`;
+          utils.dom(el).find('.grid-box').append(cell);
         }
         window.wrapLazyloadImages(el);
       });
     }
-  });
-});
+})();

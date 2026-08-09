@@ -1,121 +1,77 @@
-utils.js(window.searchConfig.js)
-  .then(() => utils.jq())
-  .then(() => {
-    const $inputArea = $("#search-input");
-    if ($inputArea.length === 0) return;
+utils.js(window.searchConfig.js).then(() => {
+  var inputArea = document.querySelector("input#search-input");
+  if (!inputArea) {
+    return;
+  }
 
-    const $resultArea = $("#search-result");
-    const $searchWrapper = $("#search-wrapper");
-    const $searchMask = $("#search-mask");
-    // v5 UMD: algoliasearch is the module namespace; access the named export
-    const client = algoliasearch.algoliasearch(window.searchConfig.appId, window.searchConfig.apiKey);
+  var resultArea = document.querySelector("#search-result");
+  var searchWrapper = document.querySelector("#search-wrapper");
+  var client = algoliasearch(window.searchConfig.appId, window.searchConfig.apiKey);
+  var index = client.initIndex(window.searchConfig.indexName);
 
-    const filterResults = (hits, filterPath) => {
-      if (!filterPath || filterPath === '/') return hits;
-      const regex = new RegExp(filterPath);
-      return hits.filter(hit => regex.test(hit.url));
-    };
+  function filterResults(hits, filterPath) {
+    if (!filterPath || filterPath === '/') return hits;
+    var regex = new RegExp(filterPath);
+    return hits.filter(hit => regex.test(hit.url));
+  }
 
-    const displayResults = hits => {
-      const $resultList = $("<ul>").addClass("search-result-list");
-      if (hits.length === 0) {
-        $searchWrapper.addClass('noresult');
-      } else {
-        $searchWrapper.removeClass('noresult');
-        hits.forEach(hit => {
-          const contentSnippet = hit._snippetResult.content.value;
-          const title = hit.hierarchy.lvl1 || 'Untitled';
-          const $item = $(`
-            <li>
-              <a href="${hit.url}">
-                <span class='search-result-title'>${title}</span>
-                <p class="search-result-content">${contentSnippet}</p>
-              </a>
-            </li>
-          `);
-          $resultList.append($item);
-        });
-      }
-      $resultArea.html($resultList);
-    };
+  function displayResults(hits) {
+    var resultList = document.createElement("ul");
+    resultList.classList.add("search-result-list");
+    if (hits.length === 0) {
+      searchWrapper.classList.add('noresult');
+    } else {
+      searchWrapper.classList.remove('noresult');
+      hits.forEach(function(hit) {
+        var contentSnippet = hit._snippetResult.content.value;
+        var title = hit.hierarchy.lvl1 || 'Untitled';
+        var item = document.createElement("li");
+        item.innerHTML = `<a href="${hit.url}"><span class='search-result-title'>${title}</span><p class="search-result-content">${contentSnippet}</p></a>`;
+        resultList.appendChild(item);
+      });
+    }
+    resultArea.replaceChildren(resultList);
+  }
 
-    const handleInput = debounce(() => {
-      const query = $inputArea.val().trim();
-      const filterPath = $inputArea.data('filter');
-      if (!query) {
-        $searchWrapper.attr('searching', 'false');
-        $resultArea.empty();
-        return;
-      }
-      $searchWrapper.attr('searching', 'true');
-      client.searchSingleIndex({
-        indexName: window.searchConfig.indexName,
-        searchParams: {
-          query: query,
-          hitsPerPage: window.searchConfig.hitsPerPage,
-          attributesToHighlight: ['content'],
-          attributesToSnippet: ['content:40'],
-          highlightPreTag: '<span class="search-keyword">',
-          highlightPostTag: '</span>',
-          restrictSearchableAttributes: ['content']
-        }
-      })
-        .then(responses => {
-          displayResults(filterResults(responses.hits, filterPath));
-        })
-        .catch(err => {
-          // 在 Promise-only API 下处理错误，避免未捕获的 rejection
-          console.error('Algolia search error:', err);
-          $searchWrapper.attr('searching', 'false');
-          $resultArea.html('');
-        });
-    }, 300);
+  inputArea.addEventListener("input", function() {
+    var query = inputArea.value.trim();
+    var filterPath = inputArea.getAttribute('data-filter');
 
-    $inputArea.on("input", handleInput);
-    $inputArea.on("keydown", e => {
-      if (e.which == 13) e.preventDefault();
+    if (query.length <= 0) {
+      searchWrapper.setAttribute('searching', 'false');
+      resultArea.replaceChildren();
+      return;
+    }
+
+    searchWrapper.setAttribute('searching', 'true');
+
+    index.search(query, {
+      hitsPerPage: window.searchConfig.hitsPerPage,
+      attributesToHighlight: ['content'],
+      attributesToSnippet: ['content:30'],
+      highlightPreTag: '<span class="search-keyword">',
+      highlightPostTag: '</span>',
+      restrictSearchableAttributes: ['content']
+    }).then(function(responses) {
+      displayResults(filterResults(responses.hits, filterPath));
     });
-
-    const observer = new MutationObserver(mutationsList => {
-      if (mutationsList.length === 1) {
-        const hasResults = mutationsList[0].addedNodes.length > 0;
-        if (hasResults) {
-          $searchWrapper.removeClass('noresult');
-        } else {
-          $searchWrapper.addClass('noresult');
-        }
-      }
-    });
-
-    observer.observe($resultArea[0], { childList: true });
-
-    const toggleSearch = (show) => {
-      const method = show ? 'fadeIn' : 'fadeOut';
-      $searchWrapper.stop(true, true)[method](300);
-      $searchMask.stop(true, true)[method](300);
-      if (show) {
-        $inputArea.focus();
-      } else {
-        clearSearch();
-      }
-    };
-
-    const clearSearch = () => {
-      $inputArea.val('');
-      $resultArea.html('');
-    };
-
-    $("#search-button a").on("click", () => toggleSearch(true));
-    $searchMask.on("click", () => toggleSearch(false));
-    $("#search-close").on("click", () => toggleSearch(false));
-    $("#search-clear").on("click", clearSearch);
   });
 
-// 防抖函数
-function debounce(func, wait) {
-  let timeout;
-  return function (...args) {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func.apply(this, args), wait);
-  };
-}
+  inputArea.addEventListener("keydown", function(e) {
+    if (e.key == 'Enter') {
+      e.preventDefault();
+    }
+  });
+
+  var observer = new MutationObserver(function(mutationsList) {
+    if (mutationsList.length === 1) {
+      if (mutationsList[0].addedNodes.length) {
+        searchWrapper.classList.remove('noresult');
+      } else if (mutationsList[0].removedNodes.length) {
+        searchWrapper.classList.add('noresult');
+      }
+    }
+  });
+
+  observer.observe(resultArea, { childList: true });
+});
