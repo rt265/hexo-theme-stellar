@@ -148,9 +148,12 @@
 
     jq: (fn) => {
       if (typeof jQuery === 'undefined') {
-        utils.js(deps.jquery).then(fn)
+        return utils.js(deps.jquery).then(() => {
+          if (typeof fn === 'function') fn();
+        })
       } else {
-        fn()
+        if (typeof fn === 'function') fn();
+        return Promise.resolve();
       }
     },
 
