@@ -12,13 +12,13 @@
     utils.request(el, api, async resp => {
       const data = await resp.json();
       let memos = versionHandlers.identify(data);
-      if (memos.version === "feature" )return;
+      if (memos.version === "feature") return;
 
       const users = el.getAttribute('user')?.split(",") || [];
       const hide = el.getAttribute('hide')?.split(",") || [];
 
       await Promise.all(memos.data.slice(0, limit || memos.data.length).map(item =>
-          createMemoCell(item, memos, users, hide, default_avatar, host).then(cell => utils.dom(el).append(cell))
+        createMemoCell(item, memos, users, hide, default_avatar, host).then(cell => utils.dom(el).append(cell))
       ));
     });
 
@@ -36,10 +36,10 @@
     const versionHandlers = {
       "22-": {
         buildUser: async (item, memos, default_avatar) =>
-            `<div class="user-info">${default_avatar ? `<img src="${default_avatar}">` : ''}<span>${item.creatorName}</span></div>`,
+          `<div class="user-info">${default_avatar ? `<img src="${default_avatar}">` : ''}<span>${item.creatorName}</span></div>`,
         buildDate: item => new Date(item.createdTs * 1000),
         buildImages: (item, host) => (item.resourceList || []).filter(res => res.type?.includes('image/')).map(res =>
-            `<p><img src="${res.externalLink || `https://${host}/o/r/${res.id}`}"></p>`
+          `<p><img src="${res.externalLink || `https://${host}/o/r/${res.id}`}"></p>`
         )
       },
       "22+": {
@@ -49,16 +49,16 @@
           if (!user) {
             if (!memos.requests[creatorId]) {
               memos.requests[creatorId] = fetch(`${memos.site}/api/v1/users/${creatorId}`)
-                  .then(response => response.json())
-                  .then(data => {
-                    if (data.username) {
-                      user = data;
-                      memos.users.push(data);
-                    } else {
-                      user = null;
-                    }
-                  })
-                  .finally(() => delete memos.requests[creatorId]);
+                .then(response => response.json())
+                .then(data => {
+                  if (data.username) {
+                    user = data;
+                    memos.users.push(data);
+                  } else {
+                    user = null;
+                  }
+                })
+                .finally(() => delete memos.requests[creatorId]);
             }
             await memos.requests[creatorId];
             user = memos.users.find(user => user.id === parseInt(creatorId));
@@ -69,7 +69,7 @@
         },
         buildDate: item => new Date(item.createTime),
         buildImages: (item) => (item.resources || []).filter(res => res.type?.includes('image/')).map(res =>
-            `<p><img src="${res.externalLink || `https://${host}/o/r/${res.id}`}"></p>`
+          `<p><img src="${res.externalLink || `https://${host}/o/r/${res.id}`}"></p>`
         )
       },
       "25+": {
@@ -79,16 +79,16 @@
           if (!user) {
             if (!memos.requests[creatorId]) {
               memos.requests[creatorId] = fetch(`${memos.site}/api/v1/users/${creatorId}`)
-                  .then(response => response.json())
-                  .then(data => {
-                    if (data.username) {
-                      user = data;
-                      memos.users.push(data);
-                    } else {
-                      user = null;
-                    }
-                  })
-                  .finally(() => delete memos.requests[creatorId]);
+                .then(response => response.json())
+                .then(data => {
+                  if (data.username) {
+                    user = data;
+                    memos.users.push(data);
+                  } else {
+                    user = null;
+                  }
+                })
+                .finally(() => delete memos.requests[creatorId]);
             }
             await memos.requests[creatorId];
             user = memos.users.find(user => user.name.split('/')[1] === creatorId);
@@ -100,7 +100,7 @@
         },
         buildDate: item => new Date(item.createTime),
         buildImages: (item) => (item.attachments || []).filter(res => res.type?.includes('image/')).map(res =>
-            `<div class="image-bg"><img src="${res.externalLink || `https://${host}/file/${res.name}/${res.filename}`}"></div>`
+          `<div class="image-bg"><img src="${res.externalLink || `https://${host}/file/${res.name}/${res.filename}`}" alt="${res.filename}"></div>`
         )
       },
       "feature": {

@@ -134,6 +134,10 @@ function layoutFooterDiv() {
       } else if (item.onclick) {
         item.onclick = item.onclick.replace(/"|\'/g, '&quot;');
         el += ' onclick="' + item.onclick + '"';
+        el += ' role="button"';
+      }
+      if (item.text) {
+        el += ' aria-label="' + item.text + '"';
       }
       el += '>';
       el += icon(item.icon, 'no-lazy');

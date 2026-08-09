@@ -18,6 +18,7 @@
 var index = 0
 
 function img(src, alt, loading) {
+  alt = alt || src.replace(/^.*[\\/]/, '').replace(/\.[^.]+$/, '') || 'image'
   let img = ''
   img += `<img class="lazy" data-fancybox="gallery-${index}" data-src="${src}"`
   if (alt?.length > 0) {
@@ -34,7 +35,7 @@ function img(src, alt, loading) {
   return img
 }
 
-module.exports = ctx => function(args, content) {
+module.exports = ctx => function (args, content) {
   args = ctx.args.map(args, ['layout', 'size', 'ratio'])
   if (args.size == null) {
     args.size = ctx.theme.config.tag_plugins.gallery.size

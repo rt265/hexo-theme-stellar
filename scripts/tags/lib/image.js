@@ -7,7 +7,7 @@
 
 'use strict'
 
-module.exports = ctx => function(args) {
+module.exports = ctx => function (args) {
   args = ctx.args.map(args, ['width', 'height', 'bg', 'download', 'padding', 'fancybox', 'ratio'], ['src', 'alt'])
   var style = ''
   if (args.width) {
@@ -30,7 +30,7 @@ module.exports = ctx => function(args) {
     }
   }
 
-  var safeAlt = require('hexo-util').escapeHTML(args.alt || '')
+  var safeAlt = require('hexo-util').escapeHTML(args.alt || args.src.replace(/^.*[\\/]/, '').replace(/\.[^.]+$/, '') || 'image')
   // 懒加载占位图（1x1 透明 PNG），真实地址放在 data-src
   const loadingImg = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII='
   function img(src, alt, style) {
