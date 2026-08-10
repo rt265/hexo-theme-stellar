@@ -144,11 +144,11 @@
       -moz-transition: all .2s ease-out, transform .5s ease-out
       -webkit-transition: all .2s ease-out, transform .5s ease-out
       -o-transition: all .2s ease-out, transform .5s ease-out
-      mask: linear-gradient(black, rgba(black, 0.75) calc(var(--blur-height) * 0.5), transparent var(--blur-height))
-      -webkit-mask: linear-gradient(black, rgba(black, 0.75) calc(var(--blur-height) * 0.5), transparent var(--blur-height))
+      mask: linear-gradient(black, rgba(black, 0.75) calc(var(--blur-height, 5rem) * 0.5), transparent var(--blur-height, 5rem))
+      -webkit-mask: linear-gradient(black, rgba(black, 0.75) calc(var(--blur-height, 5rem) * 0.5), transparent var(--blur-height, 5rem))
     &[position=bottom]:before
-      mask: linear-gradient(to top, black, rgba(black, 0.75) calc(var(--blur-height) * 0.5), transparent var(--blur-height))
-      -webkit-mask: linear-gradient(to top, black, rgba(black, 0.75) calc(var(--blur-height) * 0.5), transparent var(--blur-height))
+      mask: linear-gradient(to top, black, rgba(black, 0.75) calc(var(--blur-height, 5rem) * 0.5), transparent var(--blur-height, 5rem))
+      -webkit-mask: linear-gradient(to top, black, rgba(black, 0.75) calc(var(--blur-height, 5rem) * 0.5), transparent var(--blur-height, 5rem))
     .cover-info
       padding: 1.5rem 1rem
       position: absolute

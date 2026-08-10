@@ -59,11 +59,11 @@
       opacity var(--blur-opacity)
       pointer-events: none
     &:before
-      mask: linear-gradient(black, rgba(black, 0.75) calc(var(--blur-height-top) * 0.5), transparent var(--blur-height-top))
-      -webkit-mask: linear-gradient(black, rgba(black, 0.75) calc(var(--blur-height-top) * 0.5), transparent var(--blur-height-top))
+      mask: linear-gradient(black, rgba(black, 0.75) calc(var(--blur-height-top, 5rem) * 0.5), transparent var(--blur-height-top, 5rem))
+      -webkit-mask: linear-gradient(black, rgba(black, 0.75) calc(var(--blur-height-top, 5rem) * 0.5), transparent var(--blur-height-top, 5rem))
     &:after
-      mask: linear-gradient(to top, black, rgba(black, 0.75) calc(var(--blur-height-bottom) * 0.5), transparent var(--blur-height-bottom))
-      -webkit-mask: linear-gradient(to top, black, rgba(black, 0.75) calc(var(--blur-height-bottom) * 0.5), transparent var(--blur-height-bottom))
+      mask: linear-gradient(to top, black, rgba(black, 0.75) calc(var(--blur-height-bottom, 5rem) * 0.5), transparent var(--blur-height-bottom, 5rem))
+      -webkit-mask: linear-gradient(to top, black, rgba(black, 0.75) calc(var(--blur-height-bottom, 5rem) * 0.5), transparent var(--blur-height-bottom, 5rem))
     .top,.bottom
       z-index 1
   
