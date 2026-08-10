@@ -535,10 +535,11 @@
             if (el) utils._loadedElements.add(el);
             // 写入缓存（克隆响应，避免影响回调读取；延迟执行，避免阻塞渲染）
             if (cacheable && data.ok) {
-              utils._defer(() => {
-                data.clone().text().then(text => {
+              var cloned = data.clone();
+              utils._defer(function() {
+                cloned.text().then(function(text) {
                   utils.cache.set(url, text, data.headers.get('Content-Type') || 'application/json', ttl);
-                }).catch(() => {});
+                }).catch(function() {});
               });
             }
             // 后台刷新渲染前恢复初始结构，避免缓存渲染的内容重复
