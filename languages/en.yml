@@ -58,8 +58,8 @@ page:
     action: Back to Home
 
 search:
-  search: 🐱 ? Power by Algolia
-  search_in: 🐱 ? Power by Algolia
+  search: What do you want? 🐱
+  search_in: What do you want? 🐱
   no_results: No Results! 〒▽〒
 
 message:

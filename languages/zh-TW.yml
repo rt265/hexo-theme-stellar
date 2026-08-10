@@ -58,8 +58,8 @@ page:
     action: 返回首頁
 
 search:
-  search: 🐱？Power by Algolia
-  search_in: 🐱？Power by Algolia
+  search: 你想搜什麼喵？🐱
+  search_in: 你想搜什麼喵？🐱
   no_results: 沒有找到〒▽〒
 
 message:
