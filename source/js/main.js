@@ -301,13 +301,21 @@ const init = {
 
   canonicalCheck: () => {
     const canonical = window.canonical;
+    // 真实主站域名优先从 encoded（base64）反解，避免被「批量替换域名」的克隆站把提示指向自己
+    const getOriginalHost = () => {
+      try {
+        return atob(canonical.encoded || '') || canonical.originalHost || '';
+      } catch (e) {
+        return canonical.originalHost || '';
+      }
+    };
     function originStatusCheck() {
       return new Promise((resolve) => {
-        if (window.canonical.originalHost === window.location.hostname) {
+        if (getOriginalHost() === window.location.hostname) {
           resolve(true);
           return;
         }
-        const scriptUrl = `https://${window.canonical.originalHost}${window.canonical.param.checklink}`;
+        const scriptUrl = `https://${getOriginalHost()}${window.canonical.param.checklink}`;
         const script = document.createElement('script');
         script.src = scriptUrl;
         script.type = 'text/javascript';
@@ -322,18 +330,23 @@ const init = {
       meta.content = 'noindex, nofollow';
       document.head.appendChild(meta);
       const notice = document.createElement('div');
-      const originalURL = `https://${canonical.originalHost}`;
-      const currentURL = canonical.param.permalink.startsWith("http") ? canonical.param.permalink : originalURL;
+      const originalURL = `https://${getOriginalHost()}`;
+      let currentURL = originalURL;
+      if (canonical.param.permalink && canonical.param.permalink.startsWith("http")) {
+        try {
+          const permalinkURL = new URL(canonical.param.permalink);
+          currentURL = `${originalURL}${permalinkURL.pathname}${permalinkURL.search}`;
+        } catch (e) {
+          // permalink 异常时退回源站首页
+        }
+      }
       if (isOfficial) {
-        const closeEnable = window.localStorage.getItem('Stellar.canonical.closeEnable') === 'true'
-        const closedToday = window.localStorage.getItem('Stellar.canonical.closeTime') === new Date().toDateString()
-        if ((closeEnable && closedToday) || !(await originStatusCheck())) return;
+        if (!(await originStatusCheck())) return;
         notice.className = 'canonical-tip official';
         notice.innerHTML = `
           <a href="${currentURL}" target="_self" rel="noopener noreferrer">
           本站为官方备用站，仅供应急。点击移步主站<br>${originalURL}
           </a>
-          ${canonical.closeEnable ? '<button id="canonical-close">' + canonical.closeText || '关闭提示' + '</button>' : ''}
         `;
       } else {
         notice.className = 'canonical-tip unofficial';
@@ -346,16 +359,8 @@ const init = {
         `;
       }
       document.body.appendChild(notice);
-      const closeBtn = notice.querySelector('#canonical-close');
-      if (closeBtn) {
-        closeBtn.addEventListener('click', function () {
-          window.localStorage.setItem('Stellar.canonical.closeEnable', "true")
-          window.localStorage.setItem('Stellar.canonical.closeTime', new Date().toDateString())
-          notice.style.display = 'none';
-        });
-      }
     }
-    if (!canonical.originalHost) return;
+    if (!getOriginalHost()) return;
     const currentURL = new URL(window.location.href);
     const currentHost = currentURL.hostname.replace(/^www\./, '');
     if (currentHost == 'localhost') return;
