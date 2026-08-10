@@ -7,10 +7,10 @@ Stellar 是一个极为强大的综合型 Hexo 主题，包含博客系统、知
 - 改进了无障碍，努力贴近 WCGA AA 等级要求
 - 清理了部分现代浏览器不再需要的特性（作者的主力浏览器为 Firefox Beta latest）
 - Audio 标签放弃对网易云音乐的兼容（已经获取不到数据了），引入颜值更高的 WaveformPlayer
-- Mermaid JS 的缺省版本升级到 v10，因为上游的贡献者使用了 v10 引入的函数，但没有在主题配置文件中更改。
 - 添加 `hexo-wordcount` 实现文章字数和阅读用时统计
 - 适配 v5 版本的 `algoliasearch`
 - 其他外部包的缺省版本也同步升级
+- ~~石山 Commit 记录和胶水代码~~
 
 ## 亮点
 
