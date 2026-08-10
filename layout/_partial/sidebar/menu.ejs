@@ -6,18 +6,22 @@ function layoutDiv() {
     if (item == undefined || item.id == null || item.url == null) {
       continue
     }
-    el += `<a class="nav-item${item.id == page.menu_id ? ' active' : ''}${item.theme?.length > 0 ? ' themed' : ''}"`
+    var active = item.id == page.menu_id
+    el += `<a class="nav-item${active ? ' active' : ''}${item.theme?.length > 0 ? ' themed' : ''}"`
+    var style = `--item-grad:url(#menu-grad-${item.id})`
     if (item.theme?.length > 0) {
-      el += ` style="--item-theme:${item.theme}"`
+      style += `;--item-theme:${item.theme}`
     }
+    el += ` style="${style}"`
     el += ` title="${item.title}" href="${pretty_url(item.url)}">`
     if (item.icon?.length > 0) {
       el += icon(item.icon, 'no-lazy')
     }
     el += `<span>${__(item.title)}</span>`
-    if (item.id == page.menu_id) {
+    if (active) {
       el += `<span class="active-dot"></span>`
     }
+    el += partial('grad-def', {id: 'menu-grad-' + item.id})
     el += `</a>`
   }
   el += `</nav>`

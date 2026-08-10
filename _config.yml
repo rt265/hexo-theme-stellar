@@ -678,6 +678,7 @@ style:
     image-l: 24px # 非技术类文章插图圆角
     image: 16px # 技术类文章插图圆角
     image-s: 8px # 评论区图片圆角（部分评论支持）
+  corner-shape: superellipse(1.5) # 连续曲率圆角（仅 Chromium 139+ 支持，其余浏览器自动回退普通圆角）：superellipse(1.x) 开启，round 关闭
   color:
     # 主题色配置（不会根据明暗动态调整，请设置为通用的颜色）
     theme: "hsl(192 98% 55%)" # 主题色
@@ -695,6 +696,7 @@ style:
   gradient: # https://webgradients.com/
     start: 'linear-gradient(to right, hsl(215, 95%, 64%), hsl(195, 95%, 60%), hsl(165, 95%, 56%), hsl(165, 95%, 56%), hsl(195 95% 60%), hsl(215, 95%, 64%))'
     searchbar: 'linear-gradient(to right, #04f3ff, #08ffc6, #ddf730, #ffbd19, #ff1fe0, #c418ff, #3b5bff, #04f3ff)' # 搜索条激活时底部横条的渐变色（彩虹，收尾经蓝色平滑过渡）
+    angle: 210deg # 主题色渐变的角度（0=向上，顺时针；225deg = 右上角 → 左下角）
   leftbar:
     # 可以设置：纯色/渐变色/图片作为背景
     # 设置为纯色时，可以分别设置浅色和深色模式背景色

@@ -16,11 +16,9 @@
     width: 100%
     min-height: 36px
     border-radius: $border-bar
-    corner-shape: superellipse(1.2)
     font-size: $fs-15
     color: var(--text-p2)
     text-align: left
-    trans1 background
     position: relative
     display: flex
     flex-direction: row
@@ -30,24 +28,29 @@
     gap: 16px
     padding: 0 16px
     color: var(--text-p2)
+    // 菜单项主题色由配置内联提供（--item-theme），淡色变体在此基于它计算
+    --item-theme-light: x-theme-light()
     img,svg
       width: 1.5rem
       height: 1.5rem
       object-fit: contain
       opacity: 0.5
-      trans1 all
       color: var(--text-p2)
     span
       text-overflow: ellipsis
       word-break: keep-all
     &:hover
       color: var(--text-p1)
-      background: var(--bg-a50)
+      sidebar-light()
       img,svg
         opacity: 1
+      > svg [fill="currentColor"]
+        fill: var(--item-grad)
+      > svg [stroke="currentColor"]
+        stroke: var(--item-grad)
     &.active
       color: var(--text-p1)
-      background: var(--bg-a100)
+      sidebar-light()
       img,svg
         opacity: 1
       .active-dot
@@ -56,7 +59,12 @@
         width: 8px
         height: 8px
         border-radius: 50%
-        background: var(--theme)
+        corner-shape: round
+        background: x-theme-gradient()
+      > svg [fill="currentColor"]
+        fill: var(--item-grad)
+      > svg [stroke="currentColor"]
+        stroke: var(--item-grad)
     // 未设置主题色的菜单项，激活/悬停时图标显示通用主题色
     &:not(.themed)
       &:hover, &.active
@@ -67,5 +75,3 @@
       &:hover, &.active
         > svg
           color: var(--item-theme)
-      .active-dot
-        background: var(--item-theme)
