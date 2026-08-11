@@ -450,6 +450,13 @@ tag_plugins:
     ratio: square # origin / square
   chat:
     api: https://siteinfo.listentothewind.cn/api/v1
+  # {% audio %}
+  audio:
+    waveformplayer:
+      height: 50
+      progress_color: "#05a5ad"
+      waveform_style: seekbar
+      seek_handle: true
 
 # 基础依赖
 dependencies:
