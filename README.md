@@ -5,12 +5,14 @@ Stellar 是一个极为强大的综合型 Hexo 主题，包含博客系统、知
 和上游相比：
 
 - 改进了无障碍，努力贴近 WCGA AA 等级要求
-- 清理了部分现代浏览器不再需要的特性（作者的主力浏览器为 Firefox Beta latest）
-- Audio 标签放弃对网易云音乐的兼容（已经获取不到数据了），引入颜值更高的 WaveformPlayer
-- 添加 `hexo-wordcount` 实现文章字数和阅读用时统计
+- 清理了部分现代浏览器不再需要的特性（作者在 Firefox Beta latest / Thorium latest 上开发和测试）
+- Audio 标签移除 Aplayer 和网易云音乐的支持，使用颜值更高的 WaveformPlayer
+- 添加 `hexo-word-counter` 实现文章字数和阅读用时统计
 - 适配 v5 版本的 `algoliasearch`
 - 其他外部包的缺省版本也同步升级
 - ~~石山 Commit 记录和胶水代码~~
+
+与上游的全部改动参见此 [Full Changelog](https://github.com/xaoxuu/hexo-theme-stellar/compare/main...rt265:hexo-theme-stellar:main)
 
 ## 亮点
 
@@ -30,7 +32,9 @@ Stellar 是一个极为强大的综合型 Hexo 主题，包含博客系统、知
 
 上述亮点都可以在 [文档](https://xaoxuu.com/wiki/stellar/) 中找到详细使用方法。
 
-[![Stargazers over time](https://starchart.cc/xaoxuu/hexo-theme-stellar.svg)](https://starchart.cc/xaoxuu/hexo-theme-stellar)
+## Upstream Star History
+
+[![Star History Chart](https://star-history.dera.page/svg?repos=xaoxuu/hexo-theme-stellar&type=date&legend=top-left)](https://star-history.dera.page/#xaoxuu/hexo-theme-stellar&type=date&legend=top-left)
 
 ## Getting Started
 
@@ -52,7 +56,9 @@ theme: stellar
 Install Stellar in terminal:
 
 ```bash
-npm i hexo-theme-stellar
+# 此 fork 没有在 npm 上发版，你需要从源码拉取。
+git submodule add https://github.com/xaoxuu/hexo-theme-stellar.git themes/stellar
+git pull # in themes/stellar
 ```
 
 ## Usage
@@ -61,12 +67,14 @@ See docs: https://xaoxuu.com/wiki/stellar/
 
 > AI docs： https://deepwiki.com/xaoxuu/hexo-theme-stellar/
 
-## Examples
+由于近期上游变更较快，且此 fork 的部分功能未同步上游，因此文档可能过时/不完整。请以源代码为准。
 
-https://xaoxuu.com/wiki/stellar/examples/
+## Example
+
+https://watermelonabc.top/
 
 ## Feedback
 
-Issues: https://github.com/xaoxuu/hexo-theme-stellar/issues/
+Issues: https://github.com/rt265/hexo-theme-stellar/issues
 
-Discussions: https://github.com/xaoxuu/hexo-theme-stellar/discussions/
+请不要直接向上游报告问题，因为可能是此 fork 独有的 bug。有必要我会向上游报告。
