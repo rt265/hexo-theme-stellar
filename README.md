@@ -11,12 +11,13 @@ Stellar 是一个功能强大的综合型 Hexo 主题，内置博客、知识库
 和上游相比：
 
 - 改进了无障碍，努力贴近 WCGA AA 等级要求
+- 调整了首页轮播图和导航条的位置关系（~~我觉得不好看~~）
 - 清理了部分现代浏览器不再需要的特性（作者在 Firefox Beta latest / Thorium latest 上开发和测试）
 - Audio 标签移除 Aplayer 和网易云音乐的支持，使用颜值更高的 WaveformPlayer
 - 添加 `hexo-word-counter` 实现文章字数和阅读用时统计
 - 适配 v5 版本的 `algoliasearch`
 - 其他外部包的缺省版本也同步升级
-- ~~石山 Commit 记录和胶水代码~~
+- ~~石山 Commit 记录、V属性大爆发和胶水代码~~
 
 与上游的全部改动参见此 [Full Changelog](https://github.com/xaoxuu/hexo-theme-stellar/compare/main...rt265:hexo-theme-stellar:main)
 
@@ -44,17 +45,19 @@ Stellar 是一个功能强大的综合型 Hexo 主题，内置博客、知识库
 
 ## 示例与展示
 
-- 示例源码：[hexo-theme-stellar-examples](https://github.com/xaoxuu/hexo-theme-stellar-examples/)（`blog` 博客场景、`docs` 文档场景）
-- 展示墙：[使用 Stellar 主题的博客](https://xaoxuu.com/wiki/stellar/examples/)（30 个站点）
+此 fork 的展示：[Watermelonabc](https://watermelonabc.top/)
 
-部分使用站点：[杜老师说](https://dusays.com)、[Watermelonabc](https://watermelonabc.top/)、[妄司逸](https://blog.flechazo.icu/)
+- 上游示例源码：[hexo-theme-stellar-examples](https://github.com/xaoxuu/hexo-theme-stellar-examples/)（`blog` 博客场景、`docs` 文档场景）
+- 上游展示墙：[使用 Stellar 主题的博客](https://xaoxuu.com/wiki/stellar/examples/)（30 个站点）
+
+其他使用上游主题的站点：[杜老师说](https://dusays.com)、[妄司逸](https://blog.flechazo.icu/)
 
 ## 快速开始
 
 ### 环境要求
 
 ```yaml
-Hexo: 6.3.0 ~ latest（已验证至 8.1.2）
+Hexo: 6.3.0 ~ latest
 hexo-cli: 4.3.0 ~ latest
 node: >= 22 # 建议选择 LTS 版本
 npm: >= 10
@@ -65,7 +68,10 @@ npm: >= 10
 在博客根目录执行：
 
 ```bash
-npm install hexo-theme-stellar
+# 此 fork 没有在 npm 上发版，你需要从源码拉取。
+git submodule add https://github.com/xaoxuu/hexo-theme-stellar.git themes/stellar
+cd ./themes/stellar
+git pull
 ```
 
 ### 配置
@@ -76,13 +82,13 @@ npm install hexo-theme-stellar
 theme: stellar
 ```
 
-Install Stellar in terminal:
+从主题文件夹复制一份 `_config.yml` 到根目录并重命名为 `_config.stellar.yml`：
 
 ```bash
-# 此 fork 没有在 npm 上发版，你需要从源码拉取。
-git submodule add https://github.com/xaoxuu/hexo-theme-stellar.git themes/stellar
-git pull # in themes/stellar
+cp ./themes/stellar/_config.yml ./_config.stellar.yml
 ```
+
+修改 `_config.stellar.yml` 的配置内容。
 
 ## Usage
 
@@ -91,10 +97,6 @@ See docs: https://xaoxuu.com/wiki/stellar/
 > AI docs： https://deepwiki.com/xaoxuu/hexo-theme-stellar/
 
 由于近期上游变更较快，且此 fork 的部分功能未同步上游，因此文档可能过时/不完整。请以源代码为准。
-
-## Example
-
-https://watermelonabc.top/
 
 ## Feedback
 
