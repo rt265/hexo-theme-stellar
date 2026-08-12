@@ -1,7 +1,6 @@
 <%
 function layoutDiv() {
   var el = '';
-  el += partial('_partial/main/pin_slider', {type: 'wiki'});
   el += '<div class="navbar top">';
   el += '<div class="navbar-blur">';
     el += '<div class="navbar-container">';
@@ -45,6 +44,7 @@ function layoutDiv() {
   el += '</div>';
   el += '</div>';
   el += '</div>';
+  el += partial('_partial/main/pin_slider', {type: 'wiki'});
   return el;
 }
 %>
