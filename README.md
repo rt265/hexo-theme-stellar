@@ -49,8 +49,7 @@ Stellar 是一个功能强大的综合型 Hexo 主题，内置博客、知识库
 
 - 上游示例源码：[hexo-theme-stellar-examples](https://github.com/xaoxuu/hexo-theme-stellar-examples/)（`blog` 博客场景、`docs` 文档场景）
 - 上游展示墙：[使用 Stellar 主题的博客](https://xaoxuu.com/wiki/stellar/examples/)（30 个站点）
-
-其他使用上游主题的站点：[杜老师说](https://dusays.com)、[妄司逸](https://blog.flechazo.icu/)
+- 其他使用上游主题的站点：[杜老师说](https://dusays.com)、[妄司逸](https://blog.flechazo.icu/)
 
 ## 快速开始
 
@@ -65,18 +64,25 @@ npm: >= 10
 
 ### 安装
 
+首先，根据 [Hexo 文档](https://hexo.io/zh-cn/docs/) 的指导新建站点
+
 在博客根目录执行：
 
 ```bash
 # 此 fork 没有在 npm 上发版，你需要从源码拉取。
 git submodule add https://github.com/xaoxuu/hexo-theme-stellar.git themes/stellar
-cd ./themes/stellar
-git pull
+```
+
+对于已经添加 submodule 的仓库，新 clone 时需要在博客根目录下执行：
+
+```bash
+git submodule init
+git submodule update
 ```
 
 ### 配置
 
-编辑 `_config.yml`，启用主题：
+编辑博客根目录下的 `_config.yml`，启用主题：
 
 ```yaml
 theme: stellar
@@ -103,3 +109,7 @@ See docs: https://xaoxuu.com/wiki/stellar/
 Issues: https://github.com/rt265/hexo-theme-stellar/issues
 
 请不要直接向上游报告问题，因为可能是此 fork 独有的 bug。有必要我会向上游报告。
+
+贡献指南：[CONTRIBUTING.md](CONTRIBUTING.md)
+
+上游 [Wiki 贡献页](https://xaoxuu.com/wiki/stellar/contributors/)
