@@ -456,6 +456,26 @@ scrollbar-codeblock(convert(hexo-config('style.codeblock.scrollbar')))
 
 ---
 
+## 代码块最大高度
+
+长代码块可折叠为固定最大高度并显示纵向滚动条，避免文章页面过长。值来自主题配置：
+
+```stylus
+.md-text .highlight
+  if hexo-config('style.codeblock.max_height')
+    max-height: convert(hexo-config('style.codeblock.max_height'))
+```
+
+配置位于 `style.codeblock.max_height`，留空则不限制（默认 `300px`）：
+
+- 容器已声明 `overflow: auto`，设置 `max-height` 后超过该高度的代码块自动出现纵向滚动条
+- 文件名标签（`figcaption`）保持在代码块顶部，不随内容滚动
+- 纯 CSS 实现，无需任何 JS，不区分折叠阈值（任何超过 `max-height` 的代码块都会被折叠）
+
+**参考源码**：[source/css/_common/highlight.styl](../../../source/css/_common/highlight.styl)
+
+---
+
 ## 评论系统代码样式
 
 Artalk 评论系统包含专属代码块样式，保证评论内容一致性。

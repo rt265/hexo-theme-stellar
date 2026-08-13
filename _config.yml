@@ -696,6 +696,8 @@ style:
     animate: auto # auto, always
   codeblock:
     scrollbar: 4px
+    # 代码块最大高度，超出后显示纵向滚动条；留空则不限制（例如 300px）
+    max_height: 400px
     highlightjs_theme: https://cdn.jsdelivr.net/npm/highlight.js@11.11.1/styles/atom-one-dark.min.css
   loading:
     loading: 正在加载

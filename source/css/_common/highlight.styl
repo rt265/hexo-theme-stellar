@@ -25,6 +25,8 @@ p>code:not([class]),li>code:not([class])
   position: relative
   overflow: auto
   display: block
+  if hexo-config('style.codeblock.max_height')
+    max-height: convert(hexo-config('style.codeblock.max_height'))
   figcaption
     color: var(--text-p2)
     font-size: $fs-codeblock
