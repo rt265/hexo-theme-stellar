@@ -1,5 +1,5 @@
 <%
-// 置顶内容轮播：所有带 navbar top 的列表页上方共用。
+// 置顶内容轮播：仅首页（is_home）显示，其他列表页不渲染。
 // type: post / wiki / topic
 var pinType = type || 'post'
 var pinItems = []
@@ -114,7 +114,7 @@ function wikiSlide(proj) {
   return el
 }
 
-if (pinItems.length > 0) {
+if (is_home() && pinItems.length > 0) {
   var slidesHtml = ''
   var dotsHtml = ''
   for (var si = 0; si < pinItems.length; si++) {
