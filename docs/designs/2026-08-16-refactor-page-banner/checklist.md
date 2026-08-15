@@ -27,3 +27,8 @@
 - 发现回归：移除空 `.top` 后，作者归档页 `.bottom` 因 `space-between` 对唯一子元素不生效而顶到横幅顶部。
 - 修复：`.article.banner .content .bottom` 增加 `margin-top: auto`，`.bottom` 恒贴底；有 `.top` 页面位置与修复前一致。
 - 复测：author `.bottom` 底边与 `.content` 底边对齐（y=115/216）；story/tech/about/wiki `.bottom` 坐标与修复前一致。
+
+## 调整记录（2026-08-16 三行化）
+
+- 需求调整：上块由“显式两行”改为“显式三行”——阅读时长（字数与预计阅读）从第二行 `.meta-row` 右侧移到独立第三行 `.reading-row` 左侧，简化窄屏响应式布局（日期信息与阅读时长不再挤在同一行左右）。
+- 变更：`layout/_partial/main/navbar/article_banner.ejs`（阅读时长改第三行 `.reading-row` 渲染）、`source/css/_components/partial/article-banner.styl`（`.meta-row` 仅保留日期信息，新增 `.reading-row`）。
