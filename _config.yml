@@ -217,7 +217,7 @@ article:
   related_posts:
     enable: false
     max_count: 5
-  # 文章页是否显示字数和预计阅读时长（#302），建议选择关闭，使用插件 hexo-word-counter 代替
+  # 文章页是否显示字数和预计阅读时长
   reading_time: false
   # 文章卡片是否显示标签（最多 5 个，#580）
   card_tags: false
@@ -238,17 +238,6 @@ search:
     apiKey:
     indexName:
     js: https://cdn.jsdelivr.net/npm/algoliasearch@v5/dist/algoliasearch.umd.min.js
-
-######## Wordcount ########
-# 需要安装 hexo-word-counter
-symbols_count_time:
-  symbols: true # 单篇文章字数
-  time: true # 单篇文章预计阅读时长
-  total_symbols: true # 全站总字数
-  total_time: true # 全站预计阅读时长
-  exclude_codeblock: false # 允许排除代码块内的所有内容，以便更准确地计数单词。
-  wpm: 275 # 每分钟字数。默认值：275
-  suffix: "mins." # 如果阅读时间少于 60 分钟，则添加后缀作为字符串参数。
 
 ######## Comments ########
 comments:

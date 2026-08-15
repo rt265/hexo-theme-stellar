@@ -4,8 +4,6 @@ const content = theme.footer.content
   ?.replace('{theme.name}', stellar_info('name'))
   ?.replace('{theme.version}', stellar_info('version'))
   ?.replace('{theme.tree}', stellar_info('tree'))
-  ?.replace('{site.posts.length}', site.posts.length)
-  ?.replace('{site.posts.words}', totalcount(site));
 
 function layoutDiv() {
   var el = ''

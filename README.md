@@ -7,7 +7,6 @@ Stellar 是一个功能强大的综合型 Hexo 主题，内置博客、知识库
 - 调整了文章轮播布局（~~我觉得不好看~~）
 - 清理了部分现代浏览器不再需要的特性（作者在 Firefox Beta latest / Thorium latest 上开发和测试）
 - Audio 标签移除 Aplayer 和网易云音乐的支持，使用颜值更高的 WaveformPlayer
-- 使用 `hexo-word-counter` 实现文章字数和阅读用时统计，可提供分文章和全站统计
 - 适配 v5 版本的 `algoliasearch`（但我更建议使用 local_search）
 - 其他外部包的缺省版本也同步升级
 - ~~石山 Commit 记录、V属性大爆发和胶水代码~~

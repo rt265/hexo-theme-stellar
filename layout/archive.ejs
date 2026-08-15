@@ -53,11 +53,6 @@ function layoutArchiveList() {
     })
   	el += `</article>`
   }
-  if (theme.symbols_count_time.total_symbols) {
-    el += `<div class="archive-stats">共 ${site.posts.length} 篇文章，总计 `
-    el += symbolsCountTotal(site)
-    el += ` 字</div>`
-  }
   el += `</div>`
   return el
 }
