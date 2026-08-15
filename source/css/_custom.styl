@@ -63,11 +63,11 @@ $corner-shape = convert(hexo-config('style.corner-shape'))
   --fsh4: 'calc(%s + 4px)' % var(--fsp)
   
   // 侧边栏文字内容宽度
-  --side-content-width: 210px
+  --side-content-width: 200px
   // 元素轮廓到容器边缘的间距
-  --gap-margin: 12px
+  --gap-margin: 10px
   // 元素文本内容到元素自身的轮廓的间距
-  --gap-padding: 12px
+  --gap-padding: 10px
   
   --gap-p: 'calc(%s + 4px)' % $fs-body // gap for paragraph
   --gap-p-compact: 'calc(%s * 0.75)' % $fs-body
@@ -81,7 +81,7 @@ $corner-shape = convert(hexo-config('style.corner-shape'))
   @media screen and (max-width: $device-tablet)
     --side-content-width: 178px
   @media screen and (max-width: $device-mobile-max)
-    --side-content-width: 210px
+    --side-content-width: 200px
 
 // 动态计算值
 :root

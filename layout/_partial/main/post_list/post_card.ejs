@@ -52,7 +52,6 @@ function div_default() {
   // wordcount
   if(theme.symbols_count_time && theme.symbols_count_time.symbols) {
     el += '<span class="cap" id="post-count">';
-    el += icon('default:approximately')
     el += symbolsCount(post)
     el += ` ${__("meta.wordcount.suffix")}</span>`
   }
