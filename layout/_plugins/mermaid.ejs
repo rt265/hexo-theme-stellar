@@ -2,7 +2,8 @@
 <script>
   utils.initPlugin(() => {
     const els = document.querySelectorAll('.mermaid');
-    if (els.length > 0 && typeof mermaid !== 'undefined') {
+    if (els.length > 0) {
+      utils.css(`<%- url_for('/css/plugins/mermaid.css') %>?v=<%- stellar_info('version') %>`);
       const mermaid_config = {
         startOnLoad: false,
         theme:

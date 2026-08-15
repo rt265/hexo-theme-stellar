@@ -31,9 +31,9 @@ function layoutDiv() {
       filter = item.filter
     }
   }
-  el += `<button class="search-button" aria-label="搜索" onclick="document.getElementById('search-input').focus();">`
-  el += icon('default:search')
-  el += `</button>`
+  el += `<a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();">`
+  el += icon('default:search', '', true)
+  el += `</a>`
   el += `<input type="text" class="search-input" id="search-input"`
   if (filter.length > 0) {
     if (!filter.startsWith('/')) {
