@@ -608,10 +608,19 @@ const utils = {
           .then(resp => {
             clearTimeout(timer);
             if (timedOut) return;
-            if (cacheable) {
+            clearTimeout(timeout);
+            return resp;
+          }).then(data => {
+            if (timedOut) return;
+            // 标记元素实例为已加载
+            if (el) utils._loadedElements.add(el);
+            // 写入缓存：回调会立即消费 data 的 body，必须先同步 clone 再延迟读取
+            if (cacheable && data.ok) {
+              const cacheClone = data.clone();
+              const contentType = data.headers.get('Content-Type') || 'application/json';
               utils._defer(() => {
-                resp.clone().text().then(text => {
-                  utils.cache.set(url, text, resp.headers.get('Content-Type') || 'application/json', ttl);
+                cacheClone.text().then(text => {
+                  utils.cache.set(url, text, contentType, ttl);
                 }).catch(() => {});
               });
             }
@@ -630,6 +639,122 @@ const utils = {
               setTimeout(tryRequest, 500);
             }
           });
+        };
+        if (cacheRenderDone) {
+          Promise.race([
+            cacheRenderDone,
+            new Promise(resolve => setTimeout(resolve, 5000))
+          ]).then(load);
+        } else {
+          load();
+        }
+      });
+    },
+    requestWithoutLoading: (url, options = {}, maxRetry = 2, timeout = 5000) => {
+      const ttl = utils.cache.ttl(null, options);
+      const cacheable = utils.cache.shouldCache(url, options) && ttl > 0;
+      const cached = cacheable ? utils.cache.get(url) : null;
+
+      if (cached && utils.cache.isFresh(cached)) {
+        return Promise.resolve(utils.cache.toResponse(cached));
+      }
+
+      return new Promise((resolve, reject) => {
+        let retryCount = 0;
+        // 与 request 保持一致：最终失败时回退 stale 缓存，避免闪失败态
+        const fallback = () => {
+          if (cached) {
+            resolve(utils.cache.toResponse(cached));
+          } else {
+            reject('timeout');
+          }
+        };
+
+        const tryRequest = () => {
+          let timedOut = false;
+          const timer = setTimeout(() => {
+            timedOut = true;
+            if (++retryCount > maxRetry) fallback();
+            else tryRequest();
+          }, timeout);
+
+          utils._fetchShared(url, options)
+            .then(resp => {
+              clearTimeout(timer);
+              if (timedOut) return;
+              if (cacheable) {
+                // 调用方会消费 resp 的 body，必须先同步 clone 再延迟读取
+                const cacheClone = resp.clone();
+                const contentType = resp.headers.get('Content-Type') || 'application/json';
+                utils._defer(() => {
+                  cacheClone.text().then(text => {
+                    utils.cache.set(url, text, contentType, ttl);
+                  }).catch(() => {});
+                });
+              }
+              resolve(resp);
+            })
+            .catch(err => {
+              clearTimeout(timer);
+              if (timedOut) return;
+              if (++retryCount > maxRetry) {
+                if (cached) {
+                  resolve(utils.cache.toResponse(cached));
+                } else {
+                  reject(err);
+                }
+              } else {
+                setTimeout(tryRequest, 500);
+              }
+            });
+        };
+
+        tryRequest();
+      });
+    },
+    /********************** requestAnimationFrame ********************************/
+    // 1、requestAnimationFrame 会把每一帧中的所有 DOM 操作集中起来，在一次重绘或回流中就完成，并且重绘或回流的时间间隔紧紧跟随浏览器的刷新频率，一般来说，这个频率为每秒60帧。
+    // 2、在隐藏或不可见的元素中，requestAnimationFrame 将不会进行重绘或回流，这当然就意味着更少的的 cpu，gpu 和内存使用量。
+    requestAnimationFrame: (fn) => {
+      if (!window.requestAnimationFrame) {
+        window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame;
+      }
+      window.requestAnimationFrame(fn)
+    },
+    dark: {},
+
+    // 插件初始化管理器 - 统一处理 DOMContentLoaded 事件
+    _pluginInitializers: [],
+    _pluginCleanups: new Map(), // 存储每个插件的清理函数
+    
+    initPlugin: (initFn, name, options = {}) => {
+      if (!initFn || typeof initFn !== 'function') return;
+      
+      // 避免重复注册
+      const pluginName = name || initFn.name;
+      if (utils._pluginInitializers.some(p => p.name === pluginName)) return;
+      
+      // 包装初始化函数，添加防重复执行的保护
+      const wrappedInit = () => {
+        try {
+          // 在执行前先清理旧的资源
+          if (utils._pluginCleanups.has(pluginName)) {
+            const cleanup = utils._pluginCleanups.get(pluginName);
+            if (typeof cleanup === 'function') {
+              cleanup();
+            }
+          }
+          
+          // 执行初始化，可能返回清理函数
+          const cleanup = initFn();
+          
+          // 如果初始化函数返回了清理函数，保存它
+          if (typeof cleanup === 'function') {
+            utils._pluginCleanups.set(pluginName, cleanup);
+          }
+        } catch (error) {
+          console.error(`[Plugin ${pluginName}] 初始化失败:`, error);
+        }
       };
 
       tryRequest();
