@@ -1,16 +1,32 @@
+(function () {
+  // 防重复执行：utils.js 可能被重复加载，二次执行直接跳过，避免重复声明报错。
+  if (window.__stellarUtilsLoaded) return;
+  window.__stellarUtilsLoaded = true;
 
-function RunItem() {
-  this.list = []; // 存放回调函数
-  this.start = () => {
-    for (var i = 0; i < this.list.length; i++) {
-      this.list[i].run();
-    }
-  };
-  this.push = (fn, name, setRequestAnimationFrame = true) => {
-    let myfn = fn
-    if (setRequestAnimationFrame) {
-      myfn = () => {
-        utils.requestAnimationFrame(fn)
+  function RunItem() {
+    this.list = []; // 存放回调函数
+    this.start = () => {
+      for (var i = 0; i < this.list.length; i++) {
+        this.list[i].run();
+      }
+    };
+    this.push = (fn, name, setRequestAnimationFrame = true) => {
+      let myfn = fn
+      if (setRequestAnimationFrame) {
+        myfn = () => {
+          utils.requestAnimationFrame(fn)
+        }
+      }
+      var f = new Item(myfn, name);
+      this.list.push(f);
+    };
+    this.remove = (name) => {
+      // 倒序遍历避免 splice 后的索引问题
+      for (let index = this.list.length - 1; index >= 0; index--) {
+        const e = this.list[index];
+        if (e.name === name) {
+          this.list.splice(index, 1);
+        }
       }
     }
     var f = new Item(myfn, name);
@@ -689,39 +705,21 @@ const utils = {
       options: options
     });
 
-    // 如果 DOM 已经加载完成，立即执行
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
-      wrappedInit();
-    } else {
-      // 否则等待 DOMContentLoaded
-      window.addEventListener('DOMContentLoaded', wrappedInit, { once: true });
-    }
-  },
+  // utils.dark.mode 当前模式 dark or light
+  // utils.dark.toggle() 暗黑模式触发器
+  // utils.dark.push(callBack[,"callBackName"]) 传入触发器回调函数
+  utils.dark.method = {
+    toggle: new RunItem(),
+  };
+  utils.dark = Object.assign(utils.dark, {
+    push: utils.dark.method.toggle.push,
+  });
 
-  // 清理所有插件资源
-  cleanupPlugins: () => {
-    utils._pluginCleanups.forEach((cleanup, name) => {
-      try {
-        cleanup();
-      } catch (error) {
-        console.error(`[Plugin ${name}] 清理失败:`, error);
-      }
-    });
-    utils._pluginCleanups.clear();
-  },
+  // 暴露到 window：页尾插件片段经裸标识符 utils 即可使用
+  window.utils = utils;
 
-  // 清理所有资源（用于页面卸载或重置）
-  cleanupAll: () => {
-    utils.cleanupPlugins();
-  },
-};
-
-// utils.dark.mode 当前模式 dark or light
-// utils.dark.toggle() 暗黑模式触发器
-// utils.dark.push(callBack[,"callBackName"]) 传入触发器回调函数
-utils.dark.method = {
-  toggle: new RunItem(),
-};
-utils.dark = Object.assign(utils.dark, {
-  push: utils.dark.method.toggle.push,
-});
+  // 补跑解析期注册的插件队列
+  if (window.stellar && typeof window.stellar._flushPlugins === 'function') {
+    window.stellar._flushPlugins();
+  }
+})();

@@ -70,7 +70,6 @@ Stellar 是一个功能强大的综合型 Hexo 主题，内置博客、知识库
 
 - 上游示例源码：[hexo-theme-stellar-examples](https://github.com/xaoxuu/hexo-theme-stellar-examples/)（`blog` 博客场景、`docs` 文档场景）
 - 上游展示墙：[使用 Stellar 主题的博客](https://xaoxuu.com/wiki/stellar/examples/)（30 个站点）
-- 其他使用上游主题的站点：[杜老师说](https://dusays.com)、[妄司逸](https://blog.flechazo.icu/)
 
 ## 快速开始
 
