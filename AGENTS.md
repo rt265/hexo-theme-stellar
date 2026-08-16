@@ -35,7 +35,7 @@
 | 新增自定义标签 | `scripts/tags/lib/` + `scripts/tags/index.js` 注册 + `source/css/_components/tag-plugins/` 样式 |
 | 页面结构 / 模板 | `layout/`（`layout.ejs` 编排、`_partial/` 组件） |
 | 前端交互 | `source/js/plugins/`（源码 ES2015+，Babel 转译输出） |
-| 数据服务 / 小部件 | `source/js/services/`、`layout/_partial/sidebar/` |
+| 数据服务 / 小部件 | `source/js/services/`、`layout/_partial/widgets/` |
 | 评论系统 | `layout/_partial/comments/` |
 | 构建期逻辑 | `scripts/`（helpers / filters / generators / events / commands） |
 | 文案 | `languages/` |
@@ -48,7 +48,6 @@
 
 - `00-总览与安装配置/` ~ `09-高级主题/`：按主题域组织，入口为 `docs/knowledge/README.md` 及各领域 `index.md`
 - `VERIFICATION.md`：核查与修正记录；`tools/verify.py`：硬事实核查脚本
-- `知识库全量.md`：合并版（RAG / 一次性上下文导入）
 
 使用约定：
 
