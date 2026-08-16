@@ -28,33 +28,21 @@
           this.list.splice(index, 1);
         }
       }
-    }
-    var f = new Item(myfn, name);
-    this.list.push(f);
-  };
-  this.remove = (name) => {
-    // 倒序遍历避免 splice 后的索引问题
-    for (let index = this.list.length - 1; index >= 0; index--) {
-      const e = this.list[index];
-      if (e.name === name) {
-        this.list.splice(index, 1);
-      }
-    }
-  }
-  // 构造一个可以run的对象
-  function Item(fn, name) {
-    // 函数名称
-    this.name = name || fn.name;
-    // run方法
-    this.run = () => {
-      try {
-        fn()
-      } catch (error) {
-        console.log(error);
-      }
     };
+    // 构造一个可以run的对象
+    function Item(fn, name) {
+      // 函数名称
+      this.name = name || fn.name;
+      // run方法
+      this.run = () => {
+        try {
+          fn()
+        } catch (error) {
+          console.log(error);
+        }
+      };
+    }
   }
-}
 
 const utils = {
   // 已加载样式缓存
@@ -704,6 +692,8 @@ const utils = {
       name: pluginName,
       options: options
     });
+  }
+};
 
   // utils.dark.mode 当前模式 dark or light
   // utils.dark.toggle() 暗黑模式触发器
