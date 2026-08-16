@@ -12,6 +12,8 @@ Stellar is a Hexo theme that unifies blogging and knowledge base in one place. B
 
 You can also use it as a lightweight blog theme from day one: install, enable, and start writing. Wiki, Topic, Notebook, and dynamic data widgets are all enabled on demand, growing naturally with your content needs.
 
+This fork has something different to upstream.
+
 ## Why Stellar
 
 ### Four Content Systems, Integrated in One
@@ -62,7 +64,7 @@ Detailed usage for all of the above can be found in the [documentation](https://
 ### Requirements
 
 ```yaml
-Hexo: 6.3.0 ~ latest (verified up to 8.1.2)
+Hexo: latest
 hexo-cli: 4.3.0 ~ latest
 node: >= 22 # LTS recommended
 npm: >= 10
@@ -111,4 +113,4 @@ Full documentation: https://xaoxuu.com/wiki/stellar/ (currently available in Chi
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE), Copyright (c) 2021 xaoxuu. Permanently open source and completely free.
+This project is licensed under the [MIT License](LICENSE). Permanently open source and completely free.
