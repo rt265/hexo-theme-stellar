@@ -93,9 +93,11 @@
           // 折叠展开、tabs 切换、评论异步加载等）后坐标过期，导致下方未 reveal
           // 元素在错误位置触发或一直不显示（jlmakes/scrollreveal#569）。
           // 官方 sync() 有 bug，社区验证 delegate() 可用；防御性降级到 sync()。
+          // delegate() 是文档未公开的函数。
           const resync = () => {
             try {
               if (typeof sr.delegate === 'function') {
+                console.warn('[Plugin scrollreveal] 重算触发位置：使用 delegate()');
                 sr.delegate();
               } else if (typeof sr.sync === 'function') {
                 sr.sync();
