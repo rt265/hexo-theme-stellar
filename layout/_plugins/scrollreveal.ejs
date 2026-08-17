@@ -97,7 +97,7 @@
           const resync = () => {
             try {
               if (typeof sr.delegate === 'function') {
-                console.warn('[Plugin scrollreveal] 重算触发位置：使用 delegate()');
+                console.info('[Plugin scrollreveal] 重算触发位置：使用 delegate()');
                 sr.delegate();
               } else if (typeof sr.sync === 'function') {
                 sr.sync();
