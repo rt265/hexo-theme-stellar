@@ -2,19 +2,18 @@
   outline: none
   corner-shape: $corner-shape
 html
-  height: 100%
+  min-height: 100%
   width: 100%
-  scrollbar(8px,8px)
-  overflow-y: scroll
+  @supports not (-moz-appearance: none)
+    scrollbar()
+  overflow-y: auto
+  background: var(--background)
   font-family: $ff-body
   font-size: $fs-root
-  -webkit-text-size-adjust: 100%
-  -ms-text-size-adjust: 100%
   scroll-padding-top: 0
 body
+  min-height: 100%
   background: var(--background)
   margin: 0
-  -webkit-font-smoothing: antialiased
-  -moz-osx-font-smoothing: grayscale
-  text-rendering: optimizelegibility
+  text-rendering: auto
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0)

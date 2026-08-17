@@ -71,10 +71,6 @@ disable-select()
 
 
 scrollbar($w = 4px, $b = 2px, $c = var(--text-meta), $h = var(--text-p3))
-  // 1. 针对 Firefox 的标准属性
-  scrollbar-width: thin // 让 Firefox 滚动条变细
-  scrollbar-color: $c transparent // 滑块颜色 + 轨道透明
-  background-clip: padding-box;
 
   // 2. 针对 Chrome/Edge/Safari 的 WebKit 伪元素
   &::-webkit-scrollbar
@@ -91,8 +87,6 @@ scrollbar($w = 4px, $b = 2px, $c = var(--text-meta), $h = var(--text-p3))
 
 
 scrollbar-codeblock($height = 4px, $radius = 2px, $color = var(--text-meta), $hover = var(--text-p3))
-  scrollbar-width: thin
-  scrollbar-color: $color transparent
 
   &::-webkit-scrollbar
     height: $height
