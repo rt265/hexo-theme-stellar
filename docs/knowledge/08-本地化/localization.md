@@ -74,7 +74,7 @@ graph TD
 | `btn.wiki` | `Wiki` | |
 | `btn.topic` | `Topic` | |
 | `btn.notebook` | `Notebook` | |
-| `btn.recent_publish` | `Recent` | |
+| `btn.overview` | `Overview` | |
 | `btn.all_wiki` | `All Products` | |
 | `btn.category` | `Category` | 单数 |
 | `btn.categories` | `Categories` | 复数 |
