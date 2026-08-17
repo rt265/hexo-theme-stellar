@@ -10,14 +10,17 @@ Stellar 是一个功能强大的综合型 Hexo 主题，内置博客、知识库
 
 和上游相比：
 
-- 调整了文章轮播布局（~~我觉得不好看~~）
+- 调整了文章轮播布局（~~我觉得上游的不好看，至于语义性，这难道不是单纯的称呼问题吗？~~）
 - 清理了部分现代浏览器不再需要的特性（作者在 Firefox Beta latest / Thorium latest 上开发和测试）
-- Audio 标签移除 Aplayer 和网易云音乐的支持，使用颜值更高的 WaveformPlayer
+- Audio 标签移除对网易云音乐的支持，使用颜值更高的 WaveformPlayer
 - 适配 v5 版本的 `algoliasearch`（但我更建议使用 local_search）
 - 其他外部包的缺省版本也同步升级
 - ~~石山 Commit 记录、V属性大爆发和胶水代码~~
 
 与上游的全部改动参见此 [Full Changelog](https://github.com/xaoxuu/hexo-theme-stellar/compare/main...rt265:hexo-theme-stellar:main)
+
+> 这就是 fork 的意义。现在的上游已经引入一些我并不喜欢的特性，在一些地方限制了我的自由度。也许是在 Vibe Coding 驱动下的高强度发版，又或者在 Issue todo 和个人博文中流露出的焦虑，都说明过去照单全收的模式已经不再适用了。
+> fork 了，我就可以自行修改代码，根据自己的需求进行调整。
 
 ## 为什么选择 Stellar
 

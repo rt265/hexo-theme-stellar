@@ -23,10 +23,10 @@ img:not([src])
   height: $loadingImageSize
   max-width: 100%
   max-height: 100%
-  // 蒙版上色：SVG 作为 mask（只取形状），颜色由 background-color 提供，
-  // 避免 currentColor 在 SVG-as-image 场景（Safari）退化为黑色
-  background-color: var(--theme)
-  svg-mask-icon(var(--icon-loading, url("https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd")))
+  background-image: var(--icon-loading, url("https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd"))
+  background-size: contain
+  background-repeat: no-repeat
+  background-position: center
 
 img.lazy.loading + .lazy-icon
   position: absolute
