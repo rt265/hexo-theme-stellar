@@ -275,6 +275,8 @@ scrollreveal:
 
 **⚠️ 重要**：ScrollReveal 默认启用。`.slide-up` 内容在 ScrollReveal 加载完成前保持 `visibility: hidden`，加载/初始化失败时由独立的 3 秒 `sr-fallback` 看门狗强制显示；该看门狗与 utils/bootstrap 解耦，即使插件注册失败内容也不会永久隐藏。
 
+**页面高度变化自动重算**：ScrollReveal 按初始化时的文档坐标判断可见性，页面高度变化（图片懒加载、折叠展开、tabs 切换、评论异步加载等）后坐标过期，会导致未 reveal 元素在错误位置触发或一直不显示（上游 [jlmakes/scrollreveal#569](https://github.com/jlmakes/scrollreveal/issues/569)）。`layout/_plugins/scrollreveal.ejs` 在初始化成功后追加防抖 300ms 的 `resync`：优先调用 `sr.delegate()`（issue #569 社区验证有效，官方 `sync()` 有 bug，`typeof` 防御降级）、异常静默忽略；触发源为图片 `load`（capture 阶段）、`window` load、`MutationObserver`（仅子节点增删与 `<details>` 的 `open` 属性，不观察 style/class 以防重算循环）与主题 `tabs:click` 事件（见 [docs/designs/2026-08-17-scrollreveal-height-resync/](../../../docs/designs/2026-08-17-scrollreveal-height-resync/spec.md)）。
+
 **许可说明**：`scrollreveal@4.0` 官方包为 **GPL-3.0**（开源/非商用，商业站点需购买商用授权），与主题 MIT 协议不兼容，因此不内置进主题包，默认继续走 CDN；如需彻底去除 CDN 依赖，应自研 IntersectionObserver 入场动画（主题自有代码）。
 
 **参考源码**：[_config.yml](../../../_config.yml)

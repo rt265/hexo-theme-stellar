@@ -87,6 +87,67 @@
           pinnedGroups.forEach((group, container) => {
             sr.reveal(group, { ...slideUp, container: container });
           });
+
+          // 页面高度变化后重新计算触发位置。
+          // ScrollReveal 按初始化时的坐标判断可见性，页面高度变化（图片加载、
+          // 折叠展开、tabs 切换、评论异步加载等）后坐标过期，导致下方未 reveal
+          // 元素在错误位置触发或一直不显示（jlmakes/scrollreveal#569）。
+          // 官方 sync() 有 bug，社区验证 delegate() 可用；防御性降级到 sync()。
+          const resync = () => {
+            try {
+              if (typeof sr.delegate === 'function') {
+                sr.delegate();
+              } else if (typeof sr.sync === 'function') {
+                sr.sync();
+              }
+            } catch (err) {
+              console.warn('[Plugin scrollreveal] 重算触发位置失败:', err);
+            }
+          };
+          let resyncTimer = null;
+          const scheduleResync = () => {
+            if (resyncTimer) return;
+            resyncTimer = setTimeout(() => {
+              resyncTimer = null;
+              resync();
+            }, 300);
+          };
+
+          // 图片加载（load 不冒泡，需 capture 阶段监听）导致下方布局高度变化
+          document.addEventListener('load', (e) => {
+            if (e.target && e.target.nodeType === 1 && e.target.tagName === 'IMG') {
+              scheduleResync();
+            }
+          }, true);
+
+          // 页面全部资源（图片、字体等）加载完成后补一次重算
+          window.addEventListener('load', scheduleResync);
+
+          // DOM 结构变化：折叠面板、评论区、动态内容等。
+          // 只观察子节点增删与 <details> 的 open 属性，不观察 style/class，
+          // 避免被自身 reveal 写入的内联样式触发（防循环重算）。
+          const mo = new MutationObserver((records) => {
+            for (const r of records) {
+              if (r.type === 'childList' && (r.addedNodes.length > 0 || r.removedNodes.length > 0)) {
+                scheduleResync();
+                return;
+              }
+              if (r.type === 'attributes' && r.attributeName === 'open') {
+                scheduleResync();
+                return;
+              }
+            }
+          });
+          mo.observe(document.body, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ['open']
+          });
+
+          // 主题 tabs 切换（仅切换 display/class，不产生 DOM 增删，需显式监听）
+          document.addEventListener('tabs:click', scheduleResync);
+
           clearTimeout(watchdog);
         } catch (err) {
           console.error('[Plugin scrollreveal] 初始化失败:', err);

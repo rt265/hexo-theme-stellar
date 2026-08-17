@@ -123,7 +123,7 @@ graph TB
 - `window.stellar.initPlugin(fn, name, options)`：utils 就绪时直接委托 `utils.initPlugin`，未就绪时入队 `window.stellar._pluginQueue`；utils.js 加载完成后经 `_flushPlugins()` 统一补跑。
 - 紧随 `utils.js` 的解析期看门狗：`typeof utils === 'undefined'` 时用 `document.write` 同步补载，恢复「utils 先于插件片段定义」的不变量。
 - `utils.js` 整体包 IIFE（`window.__stellarUtilsLoaded` 防重复执行），末尾暴露 `window.utils`；DOMContentLoaded 时若仍缺失则动态补载，失败时给 `<html>` 加 `sr-fallback` 兜底显示内容。
-- scrollreveal 的 3 秒 `sr-fallback` 看门狗独立于 `utils`/ScrollReveal，即使插件初始化完全失败，`.slide-up` 内容也会在 3 秒后强制显示。
+- scrollreveal 的 3 秒 `sr-fallback` 看门狗独立于 `utils`/ScrollReveal，即使插件初始化完全失败，`.slide-up` 内容也会在 3 秒后强制显示；页面高度变化（图片加载、折叠、tabs 切换、评论异步加载）后自动调用 `sr.delegate()` 防抖重算触发位置（上游 issue #569，见 [plugin-system.md](../07-外部集成/plugin-system.md#scrollreveal滚动动画)）。
 - `layout/_plugins/index.ejs` 另有兜底 shim：bootstrap 被第三方优化器改写/移除导致 `stellar.initPlugin` 缺失时，补一个等价注册点（utils 就绪时直接委托、未就绪时入队），避免 `stellar is not defined` 连锁报错。
 - bootstrap 的动态补载脚本用 `s.setAttribute('src', ...)` 赋值：图片懒加载过滤器（`after_render:html`）与脚本延迟优化器都基于 `s.src = "..."` 做朴素正则，改为 `setAttribute` 后不再被误改写（曾因 `img_lazyload` 跨标签越界把补载 URL 改写成占位图 + `data-src` 导致整个 bootstrap 语法错误）。
 

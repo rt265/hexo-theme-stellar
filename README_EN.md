@@ -12,7 +12,7 @@ Stellar is a Hexo theme that unifies blogging and knowledge base in one place. B
 
 You can also use it as a lightweight blog theme from day one: install, enable, and start writing. Wiki, Topic, Notebook, and dynamic data widgets are all enabled on demand, growing naturally with your content needs.
 
-This fork has something different to upstream.
+This fork modified something **ONLY FOR ME**. You SHOULD go to the upstream to get better support.
 
 ## Why Stellar
 
