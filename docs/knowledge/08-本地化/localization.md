@@ -286,6 +286,25 @@ sequenceDiagram
 
 主题会从 Hexo locals 的 pages/posts 中查找归一化路径相同、语言不同的页面。语言入口优先跳转到对应版本；未找到对应版本时使用配置中的语言首页，并将不可用语言渲染为不可点击状态。`hreflang` 只为实际存在的版本输出。
 
+### Wiki 语言视图
+
+Wiki 数据在构建阶段按站点配置语言分别生成。`theme.wiki.locales[lang]` 包含该语言实际存在的项目、页面、项目树和标签；Wiki 列表、树形侧栏、相关项目、最近更新、标签页及本地搜索均从当前语言视图读取，不会把其它语言页面混入当前页面。
+
+Wiki 项目配置支持 `locales.{lang}` 覆盖。覆盖对象与默认项目配置合并，未声明的字段回退默认配置；当前语言有页面但没有专属配置时，项目仍显示并使用默认配置。没有当前语言页面的项目不会进入该语言的 Wiki 列表。
+
+```yaml
+locales:
+  en:
+    title: Stellar - A New Blogging Journey
+    search:
+      filter: /en/wiki/stellar/
+    tree:
+      'Getting Started':
+        - index
+```
+
+语言化 Wiki 聚合页使用默认语言的 `/wiki/` 和其它语言的 `/{lang}/wiki/` 路径；本地搜索索引也按相同前缀生成。
+
 **参考源码**：[languages/en.yml](../../../languages/en.yml)、[languages/zh-CN.yml](../../../languages/zh-CN.yml)
 
 ---
