@@ -19,7 +19,7 @@ Stellar 是一个功能强大的综合型 Hexo 主题，内置博客、知识库
 
 与上游的全部改动参见此 [Full Changelog](https://github.com/xaoxuu/hexo-theme-stellar/compare/main...rt265:hexo-theme-stellar:main)
 
-> 这就是 fork 的意义。现在的上游已经引入一些我并不喜欢的特性，在一些地方限制了我的自由度。也许是在 Vibe Coding 驱动下的高强度发版，又或者在 Issue todo 和个人博文中流露出的焦虑，都说明过去照单全收的模式已经不再适用了。
+> 这就是 fork 的意义。现在的上游已经引入一些我并不喜欢的特性，在一些地方限制了我的自由度，部分新增设计欠缺打磨，以及某种对于“自研”的追求。不论是在 Vibe Coding 驱动下的高强度发版，还是在 Issue todo 和个人博文中流露出的焦虑，都说明过去照单全收的模式已经不再适用了。
 > fork 了，我就可以自行修改代码，根据自己的需求进行调整。
 
 ## 为什么选择 Stellar
