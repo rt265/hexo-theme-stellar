@@ -173,7 +173,7 @@ function generate_language_links() {
     return '';
   }
   var allVersions = language_versions(page);
-  var versions = allVersions.filter(function(item) { return item.available; });
+  var versions = allVersions.filter(function(item) { return item.has_page; });
   var el = '';
   versions.forEach(function(item) {
     el += `<link rel="alternate" hreflang="${escape_meta_content(item.code)}" href="${escape_meta_content(full_url_for(item.href))}">`;

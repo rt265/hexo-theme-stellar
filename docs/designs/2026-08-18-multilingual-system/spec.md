@@ -13,8 +13,8 @@ status: 已实施
 ## 2. 技术方案
 
 - `language_switcher` 配置控制语言入口及各语言首页。
-- 页面通过 `lang` 指定语言，通过 `translation_key` 关联同一内容的不同语言版本。
-- `language_versions()` helper 从 Hexo locals 中查找同组页面和文章。
+- 页面通过 URL 第一级语言前缀识别语言，去除前缀后的归一化路径作为翻译组 key。
+- `language_versions()` helper 从 Hexo locals 中查找归一化路径相同、语言不同的页面和文章。
 - 语言入口放在主导航菜单末尾，使用原生 `<details>`，无需新增客户端状态管理。
 - head 中只输出已存在翻译页面的 `alternate hreflang`。
 
@@ -28,7 +28,7 @@ status: 已实施
 
 ## 4. 验证方式
 
-- 页面无 `translation_key` 时仍能显示语言首页入口。
-- 同一 `translation_key` 的页面互相链接。
+- 页面无需额外 front-matter 字段即可显示语言首页入口。
+- 去除语言前缀后路径相同的页面互相链接。
 - 无翻译版本时不输出错误的 `hreflang` 页面链接。
 - 主题构建和知识库核查通过。
