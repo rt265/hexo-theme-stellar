@@ -6,14 +6,17 @@ Stellar 是一个功能强大的综合型 Hexo 主题，内置博客、知识库
 
 可以只把它当作一个轻博客主题使用——安装启用即可写文章；Wiki 知识库、专栏、笔记与动态数据组件都按需启用，随着你的内容需求自然生长。
 
-此 fork 仅为自用！请前往上游项目获取更好的支持。
+此 fork **仅为自用**！请前往上游项目获取更好的支持。
 
 和上游相比：
 
 - 调整了文章轮播布局（~~我觉得上游的不好看，至于语义性，这难道不是单纯的称呼问题吗？~~）
+- 调整了边栏和主内容的大小关系，使之适合较大字体的显示
+- 参考 [前端字体二三事](https://blog.zhilu.site/2025/font-tips) 调整了部分字体排版设计
 - 清理了部分现代浏览器不再需要的特性（作者在 Firefox Beta latest / Thorium latest 上开发和测试）
 - Audio 标签移除对网易云音乐的支持，使用颜值更高的 WaveformPlayer
 - 适配 v5 版本的 `algoliasearch`（但我更建议使用 local_search）
+- 对 [Hexo Shiki Plugin](https://github.com/nova1751/hexo-shiki-plugin) 的样式支持
 - 其他外部包的缺省版本也同步升级
 - ~~石山 Commit 记录、V属性大爆发和胶水代码~~
 
@@ -146,3 +149,9 @@ Issues: https://github.com/rt265/hexo-theme-stellar/issues
 ## 开源许可
 
 本项目采用 [MIT License](LICENSE)，永久开源、完全免费。
+
+## AI 使用说明
+
+本项目使用了 LLM 生成的代码。如果你不愿使用或者你部署本项目的平台不欢迎 LLM 生成的代码，请不要使用本项目。
+
+本项目使用的模型包括但不限于 DeepSeek V4、GPT-5.6 等。
