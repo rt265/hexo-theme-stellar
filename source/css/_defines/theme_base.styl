@@ -49,11 +49,11 @@ x-set-text-colors($scheme, $p0 = 1, $p1 = 0.92, $p2 = 0.76, $p3 = 0.65, $p4 = 0.
   --text-p3: x-hsla($hue, $sat, $light, $p3)
   --text-p4: x-hsla($hue, $sat, $light, $p4)
 
-  --text-meta: x-hsla($hue, $sat, $light, 0.2)
+  --text-meta: x-hsla($hue, $sat, $light, 0.3)
   --text-code: x-hsla(183, 50, 30, 1)
 
-  --text-a10: x-hsla($hue, $sat, $light, 0.1)
-  --text-a20: x-hsla($hue, $sat, $light, 0.2)
+  --text-a10: x-hsla($hue, $sat, $light, 0.2)
+  --text-a20: x-hsla($hue, $sat, $light, 0.3)
 
   $sat = $scheme == 'dark' ? 24% : 50%
   $light = $scheme == 'dark' ? 72% : 12%
@@ -94,10 +94,10 @@ dynamic-theme-light()
 // 设置深色模式
 dynamic-theme-dark()
   $hue = $c-base-hue
-  --background: x-hsla($hue, 8%, 12%, 1)
+  --background: x-hsla($hue, 8%, 8%, 1)
   @media screen and (max-width: $device-mobile-max)
-    --background: black
-  --card: x-hsla($hue, 10%, 24%, 1)
+    --background: hsla(black, 0.8)
+  --card: x-hsla($hue, 12%, 24%, 0.5)
 
   x-set-bg-colors('dark')
   x-set-text-colors('dark')
