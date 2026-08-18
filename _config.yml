@@ -63,6 +63,13 @@ menubar:
     #   title: 社交
     #   url: /friends/
 
+# 多语言入口。items 为空时根据站点 language 自动生成语言首页链接。
+# 内容页使用 URL 的语言前缀自动关联翻译版本。
+language_switcher:
+  enable: true
+  items: []
+
+
 ######## Main ########
 # 站点主结构树
 site_tree:

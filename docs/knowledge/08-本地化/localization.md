@@ -19,10 +19,14 @@ tags:
 - [languages/zh-TW.yml](../../../languages/zh-TW.yml)
 - [layout/_partial/menubtn.ejs](../../../layout/_partial/menubtn.ejs)
 - [layout/_partial/widgets/toc.ejs](../../../layout/_partial/widgets/toc.ejs)
+- [scripts/helpers/language.js](../../../scripts/helpers/language.js)
+- [layout/_partial/sidebar/menu.ejs](../../../layout/_partial/sidebar/menu.ejs)
 
 </details>
 
 本页介绍 hexo-theme-stellar 的国际化（i18n）基础设施：语言文件格式、可用翻译键、模板如何访问翻译字符串、如何添加新语言。搜索 UI 字符串见[搜索功能](../07-外部集成/search.md)；使用 `page.error.*` 键的错误页见[错误页](../03-内容系统/error-pages.md)。
+
+主题文案国际化与内容多语言是两个不同层次：`languages/*.yml` 只翻译主题提供的界面文案；文章、Wiki 和页面正文通过 URL 的语言前缀自动关联不同语言版本。语言切换器只链接已发布的版本，不会自动翻译正文。
 
 ---
 
@@ -270,6 +274,36 @@ sequenceDiagram
 ```
 
 站点 `language` 配置值（如 `zh-CN`）直接匹配 `languages/` 下的文件名前缀。Hexo 对所选文件缺失的任何键处理回退到 `en.yml`。
+
+## 内容版本与语言切换器
+
+页面通过 URL 的第一级语言前缀声明语言版本。默认语言不加前缀，其他语言使用 `/{lang}/` 前缀：
+
+```text
+/wiki/stellar/       → 默认语言，key: wiki/stellar/
+/en/wiki/stellar/    → en，key: wiki/stellar/
+```
+
+主题会从 Hexo locals 的 pages/posts 中查找归一化路径相同、语言不同的页面。语言入口优先跳转到对应版本；未找到对应版本时使用配置中的语言首页，并将不可用语言渲染为不可点击状态。`hreflang` 只为实际存在的版本输出。
+
+### Wiki 语言视图
+
+Wiki 数据在构建阶段按站点配置语言分别生成。`theme.wiki.locales[lang]` 包含该语言实际存在的项目、页面、项目树和标签；Wiki 列表、树形侧栏、相关项目、最近更新、标签页及本地搜索均从当前语言视图读取，不会把其它语言页面混入当前页面。
+
+Wiki 项目配置支持 `locales.{lang}` 覆盖。覆盖对象与默认项目配置合并，未声明的字段回退默认配置；当前语言有页面但没有专属配置时，项目仍显示并使用默认配置。没有当前语言页面的项目不会进入该语言的 Wiki 列表。
+
+```yaml
+locales:
+  en:
+    title: Stellar - A New Blogging Journey
+    search:
+      filter: /en/wiki/stellar/
+    tree:
+      'Getting Started':
+        - index
+```
+
+语言化 Wiki 聚合页使用默认语言的 `/wiki/` 和其它语言的 `/{lang}/wiki/` 路径；本地搜索索引也按相同前缀生成。
 
 **参考源码**：[languages/en.yml](../../../languages/en.yml)、[languages/zh-CN.yml](../../../languages/zh-CN.yml)
 
