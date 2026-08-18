@@ -1,7 +1,9 @@
-.highlight
+.highlight,
+figure.shiki
   position: relative
 
-.highlight .code .copy-btn
+.highlight .code .copy-btn,
+figure.shiki .code .copy-btn
   position: absolute
   top: 0
   right: 0
@@ -17,18 +19,21 @@
   margin-top: 4px
   border-radius: 'calc(%s - 4px)' % $border-card
 
-.highlight:hover
+.highlight:hover,
+figure.shiki:hover
   .code:before
     visibility: hidden
-  .copy-btn 
+  .copy-btn
     visibility: visible
 
-.highlight .code .copy-btn.success
+.highlight .code .copy-btn.success,
+figure.shiki .code .copy-btn.success
   background: $c-green
   color: white
   visibility: visible
 
-.highlight .code .copy-btn.warning
+.highlight .code .copy-btn.warning,
+figure.shiki .code .copy-btn.warning
   background: $c-orange
   color: white
   visibility: visible
