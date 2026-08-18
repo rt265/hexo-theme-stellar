@@ -49,8 +49,8 @@ function layoutBack() {
   }
   var el = ''
   el += `<div class="wiki-home-wrap">`
-  el += `<a class="wiki-home cap" href="${pretty_url(wiki_index_url(page))}">`
-  el += icon('default:goback', '', true)
+  el += `<a class="wiki-home cap" href="${pretty_url(theme.site_tree.index_wiki.base_dir)}">`
+  el += icon('default:arrow-left', '', true)
   el += `<span>${__('btn.all_wiki')}</span>`
   el += `</a>`
   el += `</div>`
