@@ -74,8 +74,8 @@ $corner-shape = convert(hexo-config('style.corner-shape'))
   // 右栏宽度增量（在 --width-sidebar 基础上加宽）
   --rightbar-width-extra: calc(var(--gap-base) * 1.25)
   
-  --gap-p: 'calc(%s + 4px)' % $fs-body // gap for paragraph
-  --gap-p-compact: 'calc(%s * 0.75)' % $fs-body
+  --gap-p: 'calc(%s + 4px)' % var(--fs-content-base) // gap for paragraph
+  --gap-p-compact: 'calc(%s * 0.75)' % var(--fs-content-base)
   @media screen and (min-width: $device-desktop)
     --width-main: 765px
   // desktop 2k or larger
