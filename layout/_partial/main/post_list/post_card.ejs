@@ -6,10 +6,10 @@ function div_default() {
   var el = '';
   el += '<article class="md-text">';
 
-  // 封面：仅当显式 cover 为完整 URL 时渲染（Unsplash 自动封面接口已失效，不再生成）
+  // 封面：仅当显式 cover 为完整 URL 时渲染
   if (obj.image && obj.image.includes('/')) {
     el += '<div class="post-cover">';
-    el += '<img src="' + escape_html(obj.image) + '"/>';
+    el += '<img src="' + escape_html(obj.image) + '" alt="文章封面" />';
     el += '</div>';
   }
 

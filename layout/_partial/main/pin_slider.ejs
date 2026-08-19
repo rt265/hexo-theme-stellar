@@ -114,7 +114,7 @@ if (is_home() && pinItems.length > 0) {
       slidesHtml += postSlide(item)
     }
     if (pinItems.length > 1) {
-      dotsHtml += '<button type="button" class="pin-slider-dot' + (si == 0 ? ' active' : '') + '" data-index="' + si + '"></button>'
+      dotsHtml += '<button type="button" class="pin-slider-dot' + (si == 0 ? ' active' : '') + '" data-index="' + si + '" aria-label="Switch to this post"></button>'
     }
   }
   var groupKey = pinType == 'wiki' ? 'wiki' : 'post'
@@ -126,8 +126,8 @@ if (is_home() && pinItems.length > 0) {
   el += '</div>'
   if (dotsHtml.length > 0) {
     el += '<div class="pin-slider-dots">' + dotsHtml + '</div>'
-    el += '<button type="button" class="pin-slider-nav prev">' + icon('default:arrow-left') + '</button>'
-    el += '<button type="button" class="pin-slider-nav next">' + icon('default:arrow-right') + '</button>'
+    el += '<button type="button" class="pin-slider-nav prev" aria-label="Navigate to previous post">' + icon('default:arrow-left') + '</button>'
+    el += '<button type="button" class="pin-slider-nav next" aria-label="Navigate to next post">' + icon('default:arrow-right') + '</button>'
   }
   el += '</div>'
 %>
