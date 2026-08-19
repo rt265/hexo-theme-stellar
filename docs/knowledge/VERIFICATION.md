@@ -21,6 +21,34 @@
 
 ## 二、版本与事实修正
 
+| 2026-08-19 | Wiki Hero 最新版本标签位于站点导航内，与项目信息层级分离 | 将 `wiki-cover-release ds-ghinfo` 移入项目介绍区，位于 `cover-title` 上方；既有数据请求、加载隐藏、淡入和外链行为不变 | `layout/_partial/cover/wiki_cover.ejs`、`source/css/_components/partial/cover.styl`、`docs/knowledge/03-内容系统/wiki-docs.md`、`docs/designs/2026-08-19-wiki-release-above-title/` |
+
+| 2026-08-19 | Wiki Hero 的 `galaxy` 背景仅用 2D Canvas 绘制固定随机星点，缺少纵深、辉光、闪烁和生命周期控制；旧径向渐变中心色 `#27347a` 会把透明 WebGL 星场染成偏亮蓝色 | 改为按需加载的原生 WebGL 四层星场：使用固定 Galaxy 参数，鼠标仅产生平滑视差而不排斥星点；Canvas 与自适应文字取色基准统一使用纯黑 `#000000`；离开视口或页面后台时暂停，减少动态效果、WebGL/着色器/脚本失败时保留该静态底色；不新增 React、OGL 或配置项（见 `docs/designs/2026-08-19-wiki-galaxy-webgl/`） | `layout/_partial/cover/wiki_cover.ejs`、`source/js/plugins/galaxy.js`、`source/js/main.js`、`source/css/_components/partial/cover.styl`、`THIRD-PARTY-NOTICES.md`、`docs/knowledge/03-内容系统/wiki-docs.md` |
+
+| 2026-08-19 | Wiki Hero 结束后模板额外输出 `<hr>`，在 `l_cover` 与正文间产生非预期分隔线 | 移除 `wiki_cover.ejs` 中 Hero 收尾处的 `<hr>`；正文与页脚的分隔线不受影响 | `layout/_partial/cover/wiki_cover.ejs`、`docs/knowledge/03-内容系统/wiki-docs.md`、`docs/designs/2026-08-19-wiki-hero-remove-divider/` |
+
+| 2026-08-19 | Wiki Hero 最新版本标签仅展示版本，不能进入对应 GitHub 页面 | 将标签改为新窗口打开的链接按钮；优先采用 tag 数据的 `html_url`，否则用 `repo` 与 tag 生成 GitHub tag 引用页 | `layout/_partial/cover/wiki_cover.ejs`、`source/js/services/ghinfo.js`、`source/css/_components/partial/cover.styl`、`docs/knowledge/03-内容系统/wiki-docs.md`、`06-数据服务与组件/data-service-apis.md` |
+
+| 2026-08-19 | Wiki Hero 最新版本标签位于正文介绍区，和站点导航分离 | `repo` 存在时将 `wiki-cover-release ds-ghinfo` 移至 `wiki-navbar-home` 右侧；导航采用 flex 布局，间距 `1rem`，既有加载隐藏与完成后淡入行为不变 | `layout/_partial/cover/wiki_cover.ejs`、`source/css/_components/partial/cover.styl`、`docs/knowledge/03-内容系统/wiki-docs.md` |
+
+| 2026-08-19 | Wiki Hero 未配置图片或 `galaxy` 背景时，不会运行自适应取色，辅助文字与按钮边框没有稳定的默认值 | 无背景 `.wiki-cover-layout` 的 `--text-banner-theme` 回退为 `--text-p2`；版本标签和普通操作按钮的边框单独回退为 `--block-border`。图片和 `galaxy` 背景仍由内联自适应变量覆盖 | `source/css/_components/partial/cover.styl`、`docs/knowledge/03-内容系统/wiki-docs.md` |
+
+| 2026-08-19 | Wiki Hero 最新版本标签在 GitHub tag 数据返回前显示“正在获取”文案，且数据回填时会突然出现 | 初始状态仅保留标签高度且完全透明，不输出加载文案；成功取得 tag 后，以 250ms `opacity` 过渡淡入。无 tag 或请求失败时移除该标签 | `layout/_partial/cover/wiki_cover.ejs`、`source/css/_components/partial/cover.styl`、`source/js/services/ghinfo.js`、`docs/designs/2026-08-19-wiki-hero-release-loading/` |
+
+| 2026-08-18 | Wiki Hero 顶部左侧显示项目图标和项目名，无法作为站点导航入口；最新版本标签边框过实 | 左侧改为无背景的站点标题按钮，文字使用 `config.title`、颜色使用 `--text-banner`，点击返回站点首页；项目图标和名称不再在该位置显示。最新版本标签的主题色边框改为 50% 透明度 | `layout/_partial/cover/wiki_cover.ejs`、`source/css/_components/partial/cover.styl`、`docs/designs/2026-08-18-wiki-hero-cover/` |
+
+| 2026-08-19 | Wiki Hero 主标题沿用 split 模式的低饱和主题色，仍带有封面主题色倾向 | 主标题自身使用 `data-text-adaptive="contrast"`，按封面明暗仅在黑白间切换；说明、版本标签和按钮仍使用主题色变体 | `layout/_partial/cover/wiki_cover.ejs`、`source/css/_components/partial/cover.styl`、`docs/knowledge/03-内容系统/wiki-docs.md` |
+
+| 2026-08-19 | Wiki Hero 主标题切换为黑白后缺少封面主题色的视觉呼应 | 使用 `--text-banner-theme` 的半透明色为标题添加柔和发光轮廓，标题填充仍保持动态黑白 | `source/css/_components/partial/cover.styl`、`docs/knowledge/03-内容系统/wiki-docs.md` |
+
+| 2026-08-19 | Wiki Hero 的安装命令终端背景完全透明，无法形成可辨识的毛玻璃层次；站点背景色不能呼应封面 | 终端背景改为封面平均色派生的 `--text-banner-theme` 与透明色各 50% 的混色，并保留 `backdrop-filter: blur(12px)`；变量不可用时回退 `--background` | `source/css/_components/partial/cover.styl`、`docs/knowledge/03-内容系统/wiki-docs.md`、`docs/designs/2026-08-18-wiki-hero-cover/` |
+
+| 2026-08-19 | Wiki Hero 安装命令终端沿用固定蓝白文字，无法适配封面主题色 | 工具栏文字改用 `--text-banner`；命令与 `$` 提示符改用 `--text-banner-theme` | `source/css/_components/partial/cover.styl`、`docs/knowledge/03-内容系统/wiki-docs.md`、`docs/designs/2026-08-18-wiki-hero-cover/` |
+
+| 2026-08-19 | Wiki Hero 的“源码”按钮固定为黑字白底，无法随封面明暗保持反差 | 背景与边框使用 `--text-banner`；文字和图标分别对相同变量执行 `invert(1)`，保持与背景相反 | `source/css/_components/partial/cover.styl`、`docs/knowledge/03-内容系统/wiki-docs.md`、`docs/designs/2026-08-18-wiki-hero-cover/` |
+
+| 2026-08-18 | Wiki 项目首页在左栏文档树中额外附加 `#start`，且无 hash 初始打开时初始化脚本仍会自动滚到 `#start` | 移除首页条目的锚点拼接，并让无 hash 页面一律保持页面顶部；Wiki 项目卡片与文档树均直接跳转到项目首页路径，显式 `#start` 和 Wiki Hero 的“文档”按钮仍保留正文定位 | `layout/_partial/widgets/tree.ejs`、`layout/_partial/scripts/defines.ejs`、`docs/designs/2026-08-18-wiki-links-without-start-anchor/` |
+
 | 2026-08-18 | Footer Social 悬停时只取消灰阶，SVG 没有使用主题通用渐变 | 在 social 容器复用 `grad-def`，仅对 SVG 中的 `fill` / `stroke="currentColor"` 应用 `--item-grad`；渐变颜色与角度继承现有通用主题令牌，显式多色图标和未悬停灰阶行为不变 | `docs/designs/2026-08-18-footer-social-svg-gradient/` |
 
 | 2026-08-18 | Wiki 侧栏、banner 与 about 返回入口各自复用专用返回图标 | 三处统一复用分页上一页的 `default:arrow-left`，删除不再使用的专用图标定义；跳转与显示行为不变 | `docs/designs/2026-08-18-unify-back-arrow-icon/` |
@@ -122,6 +150,7 @@
 | 2026-08-16 | `layout/index_topic.ejs`、`layout/_partial/main/post_list/topic_card.ejs`、`latest_post_card.ejs`、`source/css/_components/list.styl`、`partial/post-panel.styl`、`tag-plugins/friends_posts.styl`、`source/js/services/friends_and_posts.js`、`docs/knowledge/03-内容系统/post-lists-cards.md`、`04-标签插件/social-content-card-tags.md`、`知识库全量.md` | 专栏索引页复用 wiki 卡片（图标 + 标题 + 描述），知识库未描述独立布局 | 重构为平铺容器：左侧最新文章卡片（`topic.cover`，2:1 渐变模糊，整卡跳转最新文章）+ 右侧其他文章列表（排除最新、≤3 条、按时间倒序）；`.post-panel` 公共组件统一友链文章订阅与专栏右侧列表（类名 `.previews` → `.post-panel`）（见 `docs/designs/2026-08-15-topic-latest-post-card/`） |
 | 2026-08-16 | `source/css/_common/title.styl`、`_components/pages/article-story.styl`、`_components/list.styl`、`layout/_partial/main/post_list/topic_card.ejs` | 专栏容器左右分栏（非移动端等宽）与卡片内专栏名，与最终视觉不一致 | 改为上下布局：`h2.topic-title` 专栏标题（卡片外）→ 全宽最新文章卡片（仅标题 + 时间两行）→ 其他文章列表；抽取共享 mixin `story-title()` 复用 story 文章 h2 样式（story 渲染输出不变）（见 `docs/designs/2026-08-15-topic-latest-post-card/`） |
 | 2026-08-16 | `layout/_partial/main/post_list/topic_card.ejs`、`source/css/_components/list.styl`、`docs/knowledge/03-内容系统/post-lists-cards.md`、`知识库全量.md` | 专栏标题下无描述、专栏间间隔偏小 | 标题下方新增 `p.topic-desc` 专栏描述（居中次要色）；`.md-text` 上下内边距 `1.5rem` → `2.25rem`（移动端 `1.25rem` → `1.5rem`）加大专栏间隔（见 `docs/designs/2026-08-15-topic-latest-post-card/`） |
+| 2026-08-18 | `source/css/_custom.styl`、`source/css/_common/html.styl`、`source/css/_components/pages/article-story.styl`、`source/css/_components/tag-plugins/{mdrender,poetry}.styl`、字号知识库 | 移动端正文偏小，旧字号配置和局部变量命名不统一 | 统一使用 `--fs-root`、`--fs-content-base`、`--fs-content`：桌面端 root 取 `style.font-size.root`，移动端增加 2px，story 在页面基准上再增加 2px；移除旧正文配置字段和兼容别名（见 `docs/designs/2026-08-18-mobile-font-size/`） |
 
 ## 三、处理约定
 
