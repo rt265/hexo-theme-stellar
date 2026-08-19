@@ -1,8 +1,10 @@
 <% if ((page.total || 0) > 1) { %>
   <div class="paginator-wrap dis-select<%= scrollreveal(' ') %>" aria-label="笔记分页导航">
     <%- paginator({
-      prev_text: icon('default:arrow-left'),
-      next_text: icon('default:arrow-right'),
+      prev_text: '上一页',
+      next_text: '下一页',
+      prev_class: 'extend prev',
+      next_class: 'extend next',
       force_prev_next: true,
       escape: false,
     }) %>
