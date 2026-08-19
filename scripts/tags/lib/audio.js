@@ -40,6 +40,6 @@ module.exports = ctx => function (args) {
       data-height="50"
       data-progress-color="${args.color || '#9ad3de'}"
       data-waveform-style="${args.style || 'seekbar'}"
-    </div>
+    ></div>
     `
 }
