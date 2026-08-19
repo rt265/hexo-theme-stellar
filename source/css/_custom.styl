@@ -8,10 +8,10 @@ $ff-codeblock = convert(hexo-config('style.font-family.codeblock'))
 
 // font size
 $fs-root = convert(hexo-config('style.font-size.root'))
-$fs-15 = 'calc(%s - 1px)' % var(--fs-content-base)
-$fs-14 = 'calc(%s - 2px)' % var(--fs-content-base)
-$fs-13 = 'calc(%s - 3px)' % var(--fs-content-base)
-$fs-12 = 'calc(%s - 4px)' % var(--fs-content-base)
+$fs-15 = 'calc(%s - 2px)' % var(--fs-content-base)
+$fs-14 = 'calc(%s - 3px)' % var(--fs-content-base)
+$fs-13 = 'calc(%s - 4px)' % var(--fs-content-base)
+$fs-12 = 'calc(%s - 5px)' % var(--fs-content-base)
 
 $fs-code = convert(hexo-config('style.font-size.code'))
 $fs-codeblock = convert(hexo-config('style.font-size.codeblock'))
@@ -56,8 +56,8 @@ $corner-shape = convert(hexo-config('style.corner-shape'))
 // 可以动态变化的属性
 :root
   --fs-root: $fs-root
-  --fs-content-base: 'calc(%s + 2px)' % $fs-root
-  --fs-content: var(--fs-content-base)
+  --fs-content-base: $fs-root
+  --fs-content: 'calc(%s + 2px)' % var(--fs-content-base)
   --width-main: 720px
   --fsh2: 'calc(%s + 11px)' % var(--fs-content)
   --fsh3: 'calc(%s + 7px)' % var(--fs-content)
@@ -88,7 +88,6 @@ $corner-shape = convert(hexo-config('style.corner-shape'))
   @media screen and (max-width: $device-tablet)
     --side-content-width: 190px
   @media screen and (max-width: $device-mobile-max)
-    --fs-root: 'calc(%s + 2px)' % $fs-root
     --side-content-width: 220px
 
 // shadow

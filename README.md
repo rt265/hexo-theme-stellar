@@ -12,7 +12,7 @@ Stellar 是一个功能强大的综合型 Hexo 主题，内置博客、知识库
 
 - 调整了文章轮播布局（~~我觉得上游的不好看，至于语义性，这难道不是单纯的称呼问题吗？~~）
 - 调整了边栏和主内容的大小关系，使之适合较大字体的显示
-- 参考 [前端字体二三事](https://blog.zhilu.site/2025/font-tips) 调整了部分字体排版设计
+- 参考 [前端字体二三事](https://blog.zhilu.site/2025/font-tips) 调整了部分字体排版设计（~~特别是上游自己添加了移动版本字体放大的设定~~）
 - 清理了部分现代浏览器不再需要的特性（作者在 Firefox Beta latest / Thorium latest 上开发和测试）
 - Audio 标签移除对网易云音乐的支持，使用颜值更高的 WaveformPlayer
 - 适配 v5 版本的 `algoliasearch`（但我更建议使用 local_search）
