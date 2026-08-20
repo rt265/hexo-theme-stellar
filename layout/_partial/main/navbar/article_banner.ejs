@@ -92,7 +92,7 @@ function layoutSubtitle() {
 
 function layoutIcon() {
   if (banner.avatar?.length > 0 || banner.icon?.length > 0) {
-    return `<img class="lazy avatar" data-src="${banner.avatar || banner.icon}">`
+    return `<img class="lazy avatar" alt="Avatar" data-src="${banner.avatar || banner.icon}">`
   } else {
     return ''
   }
