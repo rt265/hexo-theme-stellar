@@ -43,7 +43,10 @@
 .pin-slide.post-slide
   display: block
   height: auto
-  aspect-ratio: hexo-config('article.cover_ratio')
+  --ratio: hexo-config('article.cover_ratio')
+  aspect-ratio: 'calc(%s * 0.8)' % var(--ratio)
+  @media screen and (max-width: $device-mobile-max)
+    aspect-ratio: 'calc(%s * 0.6)' % var(--ratio)
   .pin-slide-bg
     z-index: 0
   .pin-slide-text
@@ -160,11 +163,11 @@
 .pin-slider-dot
   position: relative
   overflow: hidden
-  width: 24px
-  height: 6px
+  width: 25px
+  height: 9px
   padding: 0
   background-color: rgba(white, 0.25)
-  border-radius: 4px
+  border-radius: 6px
   border-shape: round
   cursor: pointer
   trans1 all
