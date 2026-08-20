@@ -51,7 +51,7 @@
     z-index: 0
   .pin-slide-text
     position: absolute
-    bottom: 0
+    bottom: 18px
     z-index: 2
     padding: 1rem
     line-height: 1.2
@@ -164,11 +164,10 @@
   position: relative
   overflow: hidden
   width: 25px
-  height: 9px
+  height: 25px
   padding: 0
   background-color: rgba(white, 0.25)
-  border-radius: 6px
-  border-shape: round
+  border-radius: 10px
   cursor: pointer
   trans1 all
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.2)
@@ -180,13 +179,13 @@
     top: 0
     bottom: 0
     background: var(--theme)
-    opacity: 0.6
+    opacity: 0.5
     transform: scaleX(0)
     transform-origin: left
   &:hover
-    background-color: rgba(white, 0.6)
+    background-color: rgba(white, 0.5)
   &.active
-    background-color: rgba(white, 0.6)
+    background-color: rgba(white, 0.5)
     &::before
       transform: scaleX(1)
       animation: pin-slider-progress var(--pin-duration, 4s) linear forwards
