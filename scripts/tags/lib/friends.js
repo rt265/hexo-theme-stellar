@@ -28,7 +28,7 @@ module.exports = ctx => function(args) {
         el += `<div class="grid-cell user-card">`
         el += `<a class="card-link" target="_blank" rel="external nofollow noopener noreferrer" href="${item.url}">`
         el += `<div class="lazy-box icon">`
-        el += `<img class="lazy" data-src="${item.icon || item.avatar || ctx.theme.config.default.avatar}" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;${ctx.theme.config.default.avatar}&quot;;"/>`
+        el += `<img class="lazy" alt="Friend's avatar" data-src="${item.icon || item.avatar || ctx.theme.config.default.avatar}" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;${ctx.theme.config.default.avatar}&quot;;"/>`
         el += `<div class="lazy-icon"></div>`
         el += `</div>`
         el += `<div class="name">`
