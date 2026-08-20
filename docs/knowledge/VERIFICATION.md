@@ -21,6 +21,16 @@
 
 ## 二、版本与事实修正
 
+| 2026-08-20 | PJAX 移除后的普通整页导航会销毁并重建完整文档，即使左栏内容相同也会出现可感知闪烁 | 默认启用原生同源跨文档 View Transition，左栏作为独立命名区域以 `0.2s ease-out` 平滑衔接；减少动态效果、配置关闭或浏览器不支持时回退普通整页导航，不恢复 PJAX 或脚本重入 | `_config.yml`、`source/css/_components/page-transition.styl`、`docs/knowledge/07-外部集成/pjax-navigation.md`、`docs/designs/2026-08-20-cross-document-page-transition/` |
+
+| 2026-08-20 | collection 的 grid/summary 静态背景会覆盖通用 hover/active，背景与图标 transition 在 glass 渐变切换时可出现闪烁；未激活图标的灰阶/亮度/透明度滤镜还会与 SVG 自身分层透明度叠加，造成深浅不一 | 移除布局/变体静态填充、collection 交互过渡和 leading 图标灰阶滤镜；条目默认透明，glass 的 hover/active 与 menubar 玻璃高亮一致，非 glass 统一为 `var(--block)`；未激活 SVG 使用 `var(--text-p2)`，外部图片保留原色，图标透明度统一为 `0.5`，hover/active 恢复为 `1` | `source/css/_components/collection.styl`、`docs/designs/2026-08-20-collection-surface-interactions/` |
+
+| 2026-08-20 | collection 同时维护 auto/compact/regular 三档 density，regular 单独把集合间距放大到 8px；用户 linklist 也被固定为 compact，无法使用默认几何 | 删除 regular 接口与样式，非 compact 值统一回退 auto；recent、topic/wiki related、文档树和标签树使用 compact，menubar、用户 linklist 与普通集合使用 auto；menubar 专属 2px 间距覆盖保留 | `layout/_partial/components/collection.ejs`、`layout/_partial/widgets/`、`layout/_partial/sidebar/menu.ejs`、`source/css/_components/collection.styl`、`docs/designs/2026-08-20-collection-density-simplification/` |
+
+| 2026-08-20 | collection 的 list/grid 激活态共用右侧圆点，网格卡片在已有背景高亮之外重复显示圆点 | `data-layout="grid"` 下隐藏 `.ui-collection__indicator`，保留 indicator DOM、`.is-active`、`aria-current` 及背景/文字/图标激活反馈；list 布局圆点不变 | `source/css/_components/collection.styl`、`layout/collection-preview.ejs`、`docs/knowledge/06-数据服务与组件/widget-architecture.md`、`docs/designs/2026-08-20-grid-active-without-indicator/` |
+
+| 2026-08-19 | 侧栏 menu、recent、related、tree、tagtree、linklist 各自维护宽泛 DOM 与位置耦合样式，迁移到右栏或正文时无法稳定复用 | 新增 widget frame 与 namespaced collection 原语，以 `data-ui-surface` 和 `--ui-item-*` 令牌隔离表面差异；TOC/搜索保留结构并使用 adapter，tagtree/滚动恢复同步新状态选择器；linklist 改为显式 view/show_title 契约；menubar 在公共结构上独立使用 `$fs-15` 标题与 `2px` 条目间距；普通间距收敛到 `2 / 4 / 8 / 12 / 16 / 24 / 32px` 并优先复用语义令牌；TOC 静止激活项不显示背景与阴影，悬停时仍显示普通 hover 效果，左侧指示条为 `4px` 宽且上下 inset 均为 `4px` | `layout/_partial/components/`、`layout/_partial/sidebar/menu.ejs`、`source/css/_components/sidebar/nav-area.styl`、`layout/_partial/widgets/`、`source/css/_components/collection.styl`、`source/js/main.js`、`source/js/tagtree.js`、`docs/designs/2026-08-19-sidebar-collections/` |
+
 | 2026-08-19 | `layout/_partial/widgets/components/link.ejs`、`source/css/_components/widgets/components.styl` | linklist 标题增加 `.link-title` 角色类，通用文字样式不再匹配 `.active-dot`，避免标题 padding 与省略规则拉扁激活圆点；圆点结构与 8×8px 样式保持不变 |
 
 | 2026-08-19 | Wiki Hero 最新版本标签位于站点导航内，与项目信息层级分离 | 将 `wiki-cover-release ds-ghinfo` 移入项目介绍区，位于 `cover-title` 上方；既有数据请求、加载隐藏、淡入和外链行为不变 | `layout/_partial/cover/wiki_cover.ejs`、`source/css/_components/partial/cover.styl`、`docs/knowledge/03-内容系统/wiki-docs.md`、`docs/designs/2026-08-19-wiki-release-above-title/` |
@@ -288,6 +298,7 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 
 | 短 SHA | 提交标题 | 覆盖说明 |
 |--------|----------|----------|
+| `9618899` | feat(navigation): 增加原生跨文档页面过渡 | 设计文档 `2026-08-20-cross-document-page-transition/`；知识库 `07-外部集成/pjax-navigation.md`；默认配置与 `page-transition.styl` |
 | `b2c0a3e` | feat(wiki): 改造封面卡片布局 | 设计文档 `2026-08-17-wiki-cover-cards/`；知识库 `03-内容系统/post-lists-cards.md`、`wiki-docs.md`；三语 `meta.available`；Wiki 卡片模板、样式与 GitHub 数据服务 |
 | `3274cc1` | fix: navbar 无轮播区页面默认卡片样式，滚动 2px 后恢复玻璃 | 设计文档 `2026-08-17-navbar-pin-scroll-threshold/`；知识库 `05-前端交互/client-side-overview.md`；`source/js/main.js` |
 | `2a8f5d2` | refactor(loading): 统一 loading 动画并自包含化 | 设计文档 `2026-08-17-unify-loading-animation/`、`2026-08-17-inline-loading-svg/`；知识库 configuration.md、icon-tag.md；内联 loading SVG 与各占位消费方 |
