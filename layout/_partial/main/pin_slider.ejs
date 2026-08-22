@@ -64,7 +64,7 @@ function postSlide(post) {
   }
   el += '>'
   if (!noCover) {
-    el += '<img class="pin-slide-bg" src="' + escape_html(post.cover) + '" alt=""/>'
+    el += '<img no-lazy class="pin-slide-bg" src="' + escape_html(post.cover) + '" alt="" fetchpriority="high"/>'
   }
   // 有封面时文字颜色自适应（大字 contrast、小字 theme）；无封面保持普通文章文字颜色
   el += '<div class="pin-slide-text"' + (noCover ? '' : ' data-text-adaptive="split"') + '>'
