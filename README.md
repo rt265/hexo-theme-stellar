@@ -10,14 +10,14 @@ Stellar 是一个功能强大的综合型 Hexo 主题，内置博客、知识库
 
 和上游相比：
 
-- 调整了文章轮播布局（~~我觉得上游的不好看，至于语义性，这难道不是单纯的称呼问题吗？~~）
+- 调整了文章轮播布局（~~我觉得上游的不好看。至于语义性，这难道不是单纯的称呼问题吗？~~）
 - 调整了边栏和主内容的大小关系，使之适合较大字体的显示
-- 参考 [前端字体二三事](https://blog.zhilu.site/2025/font-tips) 调整了部分字体排版设计（~~特别是上游自己添加了移动版本字体放大的设定~~）
+- 参考 [前端字体二三事](https://blog.zhilu.site/2025/font-tips) 调整了部分字体排版设计
 - 清理了部分现代浏览器不再需要的特性（作者在 Firefox Beta latest / Thorium latest 上开发和测试）
 - Audio 标签移除对网易云音乐的支持，使用颜值更高的 WaveformPlayer
 - 移除本人不需要的标签组件（如 `chat`、`frame`、`rating`、`vote`）和功能（如 `tianli_gpt`）
 - 适配 v5 版本的 `algoliasearch`（但我更建议使用 local_search）
-- 对 [Hexo Shiki Plugin](https://github.com/nova1751/hexo-shiki-plugin) 的样式支持
+- 由于本人换用 [hexo-shiki-highlight](https://github.com/rt265/hexo-shiki-highlight)，因此本主题删除了无用的主题自带的 Highlight.js 样式
 - 其他外部包的缺省版本也同步升级
 - ~~石山 Commit 记录、V属性大爆发和胶水代码~~
 
