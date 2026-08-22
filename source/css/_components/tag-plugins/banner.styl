@@ -157,9 +157,6 @@
     filter: brightness(var(--img-br)) saturate(var(--img-sat))
     // 封面放大用 1.5s 缓动，其余属性（亮度/饱和度）保持主题默认 0.2s
     transition: all .2s ease-out, transform 1.5s ease-out
-    -moz-transition: all .2s ease-out, transform 1.5s ease-out
-    -webkit-transition: all .2s ease-out, transform 1.5s ease-out
-    -o-transition: all .2s ease-out, transform 1.5s ease-out
 
 .tag-plugin.banner .navbar a.active
   // 不使用 blur-effect()（backdrop-filter）：banner 是 overflow:hidden + 圆角/连续曲率的裁剪容器，

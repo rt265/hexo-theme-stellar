@@ -34,9 +34,6 @@ cover-overlay($url-var, $sides = bottom, $layer = null)
       transform: translateZ(0)
       pointer-events: none
       transition: all .2s ease-out, transform .5s ease-out
-      -moz-transition: all .2s ease-out, transform .5s ease-out
-      -webkit-transition: all .2s ease-out, transform .5s ease-out
-      -o-transition: all .2s ease-out, transform .5s ease-out
     {$host}:before
       mask: linear-gradient(black, rgba(black, 0.75) calc(var(--blur-height-top, var(--blur-height)) * 0.5), transparent var(--blur-height-top, var(--blur-height)))
       -webkit-mask: linear-gradient(black, rgba(black, 0.75) calc(var(--blur-height-top, var(--blur-height)) * 0.5), transparent var(--blur-height-top, var(--blur-height)))
@@ -78,9 +75,6 @@ cover-overlay($url-var, $sides = bottom, $layer = null)
       transform: translateZ(0)
       pointer-events: none
       transition: all .2s ease-out, transform .5s ease-out
-      -moz-transition: all .2s ease-out, transform .5s ease-out
-      -webkit-transition: all .2s ease-out, transform .5s ease-out
-      -o-transition: all .2s ease-out, transform .5s ease-out
     if $sides == top
       {$host}:before
         mask: linear-gradient(black, rgba(black, 0.75) calc(var(--blur-height-top, var(--blur-height)) * 0.5), transparent var(--blur-height-top, var(--blur-height)))
