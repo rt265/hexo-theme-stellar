@@ -44,8 +44,8 @@
   display: block
   height: auto
   --ratio: hexo-config('article.cover_ratio')
-  aspect-ratio: 'calc(%s * 0.8)' % var(--ratio)
-  @media screen and (max-width: $device-mobile-max)
+  aspect-ratio: 'calc(%s * 0.7)' % var(--ratio)
+  @media screen and (max-width: $device-tablet)
     aspect-ratio: 'calc(%s * 0.6)' % var(--ratio)
   .pin-slide-bg
     z-index: 0
