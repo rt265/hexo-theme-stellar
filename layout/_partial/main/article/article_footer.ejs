@@ -104,13 +104,13 @@ function layoutDiv() {
     function socialButtons() {
       var el = ''
       theme.article.share.forEach((item, i) => {
-        if (['qrcode-link', 'weibo', 'email', 'link'].includes(item)) {
+        if (['wechat', 'weibo', 'email', 'link'].includes(item)) {
           el += '<a class="social share-item ' + item + '"';
           if (item == 'weibo') {
             el += ' target="_blank" rel="external nofollow noopener noreferrer"';
           }
-          if (item == 'qrcode-link') {
-            el += ' onclick=\'util.toggle("qrcode-link")\'';
+          if (item == 'wechat') {
+            el += ' onclick=\'util.toggle("wechat")\'';
           } else if (item == 'weibo') {
             el += ' href="https://service.weibo.com/share/share.php?url=' + urlenc(page.permalink);
             el += '&title=' + urlenc(page.title + ' - ' + config.title);
@@ -135,9 +135,9 @@ function layoutDiv() {
       return el;
     }
     function qrcode() {
-      if (theme.article.share.includes('qrcode-link')) {
+      if (theme.article.share.includes('wechat')) {
         return `
-        <div class="qrcode" id="qrcode-link" style="opacity:0;height:0">
+        <div class="qrcode" id="wechat" style="opacity:0;height:0">
           <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=${urlenc(page.permalink)}" alt="页面二维码"/>
         </div>
         `
