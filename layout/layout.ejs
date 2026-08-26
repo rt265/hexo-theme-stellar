@@ -56,7 +56,7 @@ if (theme.style.prefers_theme === 'auto') {
           html += partial('_partial/sidebar/index_leftbar')
         html += `</div>`
       html += `</aside>`
-      html += `<div class="l_main transition-fade" id="swup" data-ui-surface="content">`
+      html += `<div class="l_main" id="main" data-ui-surface="content">`
         html += partial('_partial/sidebar/logo', {where: 'main'})
         html += body
         html += partial('_partial/main/footer')
