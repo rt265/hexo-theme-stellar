@@ -51,6 +51,51 @@ function tagtreeWidgetOnPage() {
 <script defer src="<%- url_for('/js/plugins/dropdown.js') %>?v=<%- stellar_info('version') %>"></script>
 <script src="<%- url_for(`${theme.stellar.main_js}?v=${stellar_info('version')}`) %>" defer></script>
 <script defer src="<%- url_for('/js/theme.js') %>?v=<%- stellar_info('version') %>"></script>
+<% if (theme.style.page_transition?.swup) { %>
+<script defer src="https://cdn.jsdelivr.net/npm/swup@4.9.2/dist/Swup.umd.js"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', function () {
+    if (typeof Swup !== 'function' || window.swup) return;
+
+    var nextDocument = null;
+    var syncSelector = '#l_cover, .l_left, .l_right, .float-panel';
+    window.swup = new Swup({ containers: ['#swup'] });
+
+    window.swup.hooks.on('content:replace', function (visit, args) {
+      nextDocument = new DOMParser().parseFromString(args.page.html, 'text/html');
+      document.querySelectorAll(syncSelector).forEach(function (current) {
+        var replacement = nextDocument.querySelector(
+          current.id ? '#' + current.id : '.' + current.classList[0]
+        );
+        if (replacement) current.replaceWith(replacement.cloneNode(true));
+      });
+
+      var currentBody = document.querySelector('.l_body');
+      var nextBody = nextDocument.querySelector('.l_body');
+      if (currentBody && nextBody) {
+        Array.from(currentBody.attributes).forEach(function (attr) {
+          currentBody.removeAttribute(attr.name);
+        });
+        Array.from(nextBody.attributes).forEach(function (attr) {
+          currentBody.setAttribute(attr.name, attr.value);
+        });
+      }
+    });
+
+    window.swup.hooks.on('page:view', function () {
+      nextDocument = null;
+      window.lazyLoadInstance?.update();
+      if (typeof stellar === 'object' && typeof stellar.initPage === 'function') {
+        stellar.initPage();
+      }
+      if (typeof utils === 'object' && typeof utils.reinitPlugins === 'function') {
+        utils.reinitPlugins();
+      }
+      document.dispatchEvent(new CustomEvent('stellar:page-view'));
+    });
+  });
+</script>
+<% } %>
 
 <% if (tagtreeWidgetOnPage()) { %>
   <script>window.__STELLAR_TAGTREE__ = { expand_active: <%- JSON.stringify(!!(theme.widgets.tagtree && theme.widgets.tagtree.expand_active)) %> };</script>

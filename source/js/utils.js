@@ -703,6 +703,11 @@
       }
     },
 
+    // 重新初始化已注册插件
+    reinitPlugins: () => {
+      utils._pluginInitializers.forEach((plugin) => plugin.fn());
+    },
+
     // 清理所有插件资源
     cleanupPlugins: () => {
       utils._pluginCleanups.forEach((cleanup, name) => {
